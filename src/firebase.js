@@ -33,6 +33,7 @@ export const auth = getAuth(app);
 export function signUp(email, password) {
   return createUserWithEmailAndPassword(auth, email, password);
 }
+
 export function googleSignIn() {
   const googleAuthProvider = new GoogleAuthProvider();
   return signInWithPopup(auth, googleAuthProvider);

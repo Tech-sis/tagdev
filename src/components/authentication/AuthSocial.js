@@ -6,7 +6,6 @@ import twitterFill from '@iconify/icons-eva/twitter-fill';
 import facebookFill from '@iconify/icons-eva/facebook-fill';
 // material
 import { Stack, Button, Divider, Typography } from '@mui/material';
-// import { useUserAuth } from '../../context/UserAuthContext';
 import { googleSignIn } from '../../firebase';
 
 // ----------------------------------------------------------------------
