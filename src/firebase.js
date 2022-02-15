@@ -1,0 +1,41 @@
+/* eslint-disable prettier/prettier */
+import { useState, useEffect } from 'react';
+import { initializeApp } from 'firebase/app';
+import {
+  getAuth,
+  createUserWithEmailAndPassword,
+  signInWithEmailAndPassword,
+  signOut,
+  onAuthStateChanged,
+  GoogleAuthProvider,
+  signInWithPopup
+} from 'firebase/auth';
+// import { auth } from './firebase';
+
+// const [user, setUser] = useState({});
+
+// onAuthStateChanged(auth, (currentUser) => {
+//   setUser(currentUser);
+// });
+
+const firebaseConfig = {
+  apiKey: 'AIzaSyAF1xJWRo8VtDMAZLW9N7J_c7Au6sRmMwM',
+  authDomain: 'order-app-9863d.firebaseapp.com',
+  projectId: 'order-app-9863d',
+  storageBucket: 'order-app-9863d.appspot.com',
+  messagingSenderId: '758539270283',
+  appId: '1:758539270283:web:03df620fe6d519c97f7c8e',
+  measurementId: 'G-0XPWL9NV7L'
+};
+
+const app = initializeApp(firebaseConfig);
+export const auth = getAuth(app);
+export function signUp(email, password) {
+  return createUserWithEmailAndPassword(auth, email, password);
+}
+export function googleSignIn() {
+  const googleAuthProvider = new GoogleAuthProvider();
+  return signInWithPopup(auth, googleAuthProvider);
+}
+
+export default app;
