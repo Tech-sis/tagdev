@@ -9,7 +9,8 @@ import { useNavigate } from 'react-router-dom';
 import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
-// firebase
+// logic
+
 import { signUp } from '../../../firebase';
 
 // ----------------------------------------------------------------------

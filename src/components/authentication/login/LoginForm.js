@@ -16,12 +16,15 @@ import {
   FormControlLabel
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
+// firebase
+import { logIn } from '../../../firebase';
 
 // ----------------------------------------------------------------------
 
 export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState('');
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -35,8 +38,14 @@ export default function LoginForm() {
       remember: true
     },
     validationSchema: LoginSchema,
-    onSubmit: () => {
-      navigate('/dashboard', { replace: true });
+    onSubmit: async (values) => {
+      console.log(values);
+      try {
+        await logIn(values.email, values.password);
+        navigate('/dashboard');
+      } catch (err) {
+        setError(err.message);
+      }
     }
   });
 

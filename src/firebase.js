@@ -10,13 +10,6 @@ import {
   GoogleAuthProvider,
   signInWithPopup
 } from 'firebase/auth';
-// import { auth } from './firebase';
-
-// const [user, setUser] = useState({});
-
-// onAuthStateChanged(auth, (currentUser) => {
-//   setUser(currentUser);
-// });
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAF1xJWRo8VtDMAZLW9N7J_c7Au6sRmMwM',
@@ -30,6 +23,12 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+// eslint-disable-next-line react-hooks/rules-of-hooks
+// const [user, setUser] = useState(null);
+// onAuthStateChanged(auth, (currentUser) => {
+//   setUser(currentUser);
+// });
+
 export function signUp(email, password) {
   return createUserWithEmailAndPassword(auth, email, password);
 }
@@ -37,6 +36,14 @@ export function signUp(email, password) {
 export function googleSignIn() {
   const googleAuthProvider = new GoogleAuthProvider();
   return signInWithPopup(auth, googleAuthProvider);
+}
+
+export function logIn(email, password) {
+  console.log(email, password);
+  return signInWithEmailAndPassword(auth, email, password);
+}
+export function logOut() {
+  return signOut(auth);
 }
 
 export default app;
