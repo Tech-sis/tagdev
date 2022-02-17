@@ -7,11 +7,14 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
+// firebase
+import { onAuthStateChanged } from 'firebase/auth';
 // components
 import MenuPopover from '../../components/MenuPopover';
 //
 import account from '../../_mocks_/account';
 import { logOut } from '../../firebase';
+// import { useUserAuth } from '../../components/context/UserAuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -36,9 +39,11 @@ const MENU_OPTIONS = [
 // ----------------------------------------------------------------------
 
 export default function AccountPopover() {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
+  // const [user, setUser] = useState({});
+  // const { logOut } = useUserAuth;
 
   const handleOpen = () => {
     setOpen(true);
@@ -46,17 +51,19 @@ export default function AccountPopover() {
   const handleClose = () => {
     setOpen(false);
   };
-  const handleLogOut = async (e) => {
-    e.preventDefault();
-    try {
-      await logOut();
-      handleClose();
-      navigate('/login');
-      console.log('logged out');
-    } catch (err) {
-      console.log(err.message);
-    }
+  const handleLogOut = async () => {
+    logOut();
+    console.log('logged out');
+    // navigate('/');
   };
+
+  //   try {
+  //     logOut();
+  //     console.log('logged out');
+  //   } catch (err) {
+  //     console.log(err.message);
+  //   }
+  // };
 
   return (
     <>

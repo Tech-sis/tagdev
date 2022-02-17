@@ -17,14 +17,16 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // firebase
-import { logIn } from '../../../firebase';
+import { logIn, forgotPassword } from '../../../firebase';
+// import { useUserAuth } from '../../context/UserAuthContext';
 
 // ----------------------------------------------------------------------
 
-export default function LoginForm() {
+export default function LoginForm(props) {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  // const { logIn, forgotPassword } = useUserAuth;
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -43,11 +45,21 @@ export default function LoginForm() {
       try {
         await logIn(values.email, values.password);
         navigate('/dashboard');
-      } catch (err) {
-        setError(err.message);
+      } catch (error) {
+        setError(error.message);
       }
     }
   });
+
+  const handlePasswordReset = (e) => {
+    e.preventDefault();
+    try {
+      forgotPassword();
+      console.log('email sent');
+    } catch (err) {
+      console.log(err.message);
+    }
+  };
 
   const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
 
@@ -95,7 +107,7 @@ export default function LoginForm() {
             label="Remember me"
           />
 
-          <Link component={RouterLink} variant="subtitle2" to="#">
+          <Link component={RouterLink} variant="subtitle2" to="#" onClick={handlePasswordReset}>
             Forgot password?
           </Link>
         </Stack>

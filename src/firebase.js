@@ -8,8 +8,11 @@ import {
   signOut,
   onAuthStateChanged,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  updateProfile,
+  sendPasswordResetEmail
 } from 'firebase/auth';
+import { getFirestore, setDoc, collection } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAF1xJWRo8VtDMAZLW9N7J_c7Au6sRmMwM',
@@ -23,14 +26,39 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
-// eslint-disable-next-line react-hooks/rules-of-hooks
-// const [user, setUser] = useState(null);
-// onAuthStateChanged(auth, (currentUser) => {
+export const db = getFirestore(app);
+
+export async function signUp(email, password, firstName, lastName) {
+  await createUserWithEmailAndPassword(auth, email, password);
+  const userCredential = await updateProfile(auth.currentUser, {
+    displayName: `${firstName} ${lastName}`
+  });
+  const { user } = userCredential;
+  setDoc(db, `users/${user.uid}`, {
+    firstName,
+    lastName,
+    email,
+    password
+  }).catch((error) => {
+    console.log(error);
+  });
+}
+
+export function logIn(email, password) {
+  console.log(email, password);
+  return signInWithEmailAndPassword(auth, email, password);
+}
+
+// const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+//   const [user, setUser] = useState({});
 //   setUser(currentUser);
+//   return () => {
+//     unsubscribe();
+//   };
 // });
 
-export function signUp(email, password) {
-  return createUserWithEmailAndPassword(auth, email, password);
+export function logOut() {
+  return signOut(auth);
 }
 
 export function googleSignIn() {
@@ -38,12 +66,8 @@ export function googleSignIn() {
   return signInWithPopup(auth, googleAuthProvider);
 }
 
-export function logIn(email, password) {
-  console.log(email, password);
-  return signInWithEmailAndPassword(auth, email, password);
-}
-export function logOut() {
-  return signOut(auth);
+export function forgotPassword(email) {
+  return sendPasswordResetEmail(auth, email);
 }
 
 export default app;

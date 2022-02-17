@@ -6,19 +6,19 @@ import GlobalStyles from './theme/globalStyles';
 // components
 import ScrollToTop from './components/ScrollToTop';
 import { BaseOptionChartStyle } from './components/charts/BaseOptionChart';
-// import { UserAuthContextProvider } from './context/UserAuthContext';
+import { UserAuthContextProvider } from './components/context/UserAuthContext';
 
 // ----------------------------------------------------------------------
 
 export default function App() {
   return (
-    // <UserAuthContextProvider>
     <ThemeConfig>
       <ScrollToTop />
       <GlobalStyles />
       <BaseOptionChartStyle />
-      <Router />
+      <UserAuthContextProvider>
+        <Router />
+      </UserAuthContextProvider>
     </ThemeConfig>
-    //  </UserAuthContextProvider>
   );
 }

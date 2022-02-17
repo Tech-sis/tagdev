@@ -6,44 +6,72 @@ import {
   signOut,
   onAuthStateChanged,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  updateProfile,
+  sendPasswordResetEmail
 } from 'firebase/auth';
-import { auth } from '../firebase';
+import { setDoc } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
 
 const userAuthContext = createContext();
 
 export function UserAuthContextProvider({ children }) {
   const [user, setUser] = useState({});
 
-  function signUp(email, password) {
-    return createUserWithEmailAndPassword(auth, email, password);
+  async function signUp(email, password, firstName, lastName) {
+    await createUserWithEmailAndPassword(auth, email, password);
+    const userCredential = await updateProfile(auth.currentUser, {
+      displayName: `${firstName} ${lastName}`
+    });
+    const { user } = userCredential;
+    setDoc(db, `users/${user.uid}`, {
+      firstName,
+      lastName,
+      email,
+      password
+    }).catch((error) => {
+      console.log(error);
+    });
   }
+
   function logIn(email, password) {
     console.log(email, password);
     return signInWithEmailAndPassword(auth, email, password);
   }
+
   function logOut() {
     return signOut(auth);
   }
+
   function googleSignIn() {
     const googleAuthProvider = new GoogleAuthProvider();
     return signInWithPopup(auth, googleAuthProvider);
   }
 
+  function forgotPassword(email) {
+    return sendPasswordResetEmail(auth, email);
+  }
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      
     });
     return () => {
       unsubscribe();
     };
   }, []);
 
-  return (
-    <userAuthContext.Provider value={{ user, signUp, logIn, logOut, googleSignIn }}>
-      {children}
-    </userAuthContext.Provider>
-  );
+  const value = {
+    user,
+    signUp,
+    logIn,
+    logOut,
+    googleSignIn,
+    forgotPassword
+  };
+
+  return <userAuthContext.Provider value={{ value }}>{children}</userAuthContext.Provider>;
 }
 
 export function useUserAuth() {

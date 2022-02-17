@@ -1,5 +1,5 @@
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
@@ -10,8 +10,9 @@ import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // logic
-
-import { signUp } from '../../../firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { doc, setDoc, collection, addDoc } from 'firebase/firestore';
+import { signUp, auth } from '../../../firebase';
 
 // ----------------------------------------------------------------------
 
@@ -19,6 +20,8 @@ export default function RegisterForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
+  const [user, setUser] = useState({});
+  // const { signUp } = useUserAuth;
 
   const RegisterSchema = Yup.object().shape({
     firstName: Yup.string()
@@ -41,15 +44,24 @@ export default function RegisterForm() {
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values) => {
-      console.log(values);
+      // console.log(values);
+      setError('');
       try {
         await signUp(values.email, values.password);
         navigate('/dashboard');
-      } catch (err) {
-        setError(err.message);
+      } catch (error) {
+        setError(error.message);
       }
     }
   });
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+  //     setUser(currentUser);
+  //   });
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []);
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
