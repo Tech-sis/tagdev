@@ -8,8 +8,10 @@ import {
   signOut,
   onAuthStateChanged,
   GoogleAuthProvider,
-  signInWithPopup
+  signInWithPopup,
+  sendPasswordResetEmail
 } from 'firebase/auth';
+import { getFirestore } from 'firebase/firestore';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAF1xJWRo8VtDMAZLW9N7J_c7Au6sRmMwM',
@@ -23,6 +25,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 export const auth = getAuth(app);
+export const db = getFirestore(app);
 // eslint-disable-next-line react-hooks/rules-of-hooks
 // const [user, setUser] = useState(null);
 // onAuthStateChanged(auth, (currentUser) => {
@@ -44,6 +47,9 @@ export function logIn(email, password) {
 }
 export function logOut() {
   return signOut(auth);
+}
+export function forgotPassword(email) {
+  return sendPasswordResetEmail(auth, email);
 }
 
 export default app;

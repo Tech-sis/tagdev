@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -17,7 +18,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // firebase
-import { logIn } from '../../../firebase';
+import { logIn, forgotPassword } from '../../../firebase';
 
 // ----------------------------------------------------------------------
 
@@ -48,6 +49,15 @@ export default function LoginForm() {
       }
     }
   });
+
+  const handlePasswordReset = () => {
+    try {
+      forgotPassword(values.email);
+      console.log('Email sent');
+    } catch (err) {
+      setError(err.message);
+    }
+  };
 
   const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
 
@@ -95,7 +105,7 @@ export default function LoginForm() {
             label="Remember me"
           />
 
-          <Link component={RouterLink} variant="subtitle2" to="#">
+          <Link component={RouterLink} variant="subtitle2" to="#" onClick={handlePasswordReset}>
             Forgot password?
           </Link>
         </Stack>

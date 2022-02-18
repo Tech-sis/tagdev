@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { Icon } from '@iconify/react';
 import { useRef, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';

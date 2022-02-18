@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
@@ -6,7 +7,8 @@ import twitterFill from '@iconify/icons-eva/twitter-fill';
 import facebookFill from '@iconify/icons-eva/facebook-fill';
 // material
 import { Stack, Button, Divider, Typography } from '@mui/material';
-import { googleSignIn } from '../../firebase';
+import { collection, addDoc } from 'firebase/firestore';
+import { googleSignIn, db, auth } from '../../firebase';
 
 // ----------------------------------------------------------------------
 
@@ -14,10 +16,23 @@ export default function AuthSocial() {
   const [error, setError] = useState('');
   const navigate = useNavigate();
 
+  const userRef = collection(db, 'users');
+
   const handleGoogleSignIn = async (e) => {
     e.preventDefault();
     try {
       await googleSignIn();
+      const user = auth.currentUser;
+      console.log(user);
+      await addDoc(userRef, {
+        createdAt: new Date(),
+        uid: user.uid,
+        displayName: user.displayName,
+        email: user.email,
+        phoneNumber: user.phoneNumber,
+        photoURL: user.photoURL,
+        role: 'customer'
+      });
       navigate('/dashboard');
     } catch (err) {
       setError(err.message);

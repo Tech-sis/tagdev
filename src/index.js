@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // scroll bar
 import 'simplebar/src/simplebar.css';
 

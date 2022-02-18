@@ -8,7 +8,7 @@ import AuthLayout from '../layouts/AuthLayout';
 // components
 import Page from '../components/Page';
 import { MHidden } from '../components/@material-extend';
-import { RegisterForm } from '../components/authentication/register';
+import { RegisterVendorForm } from '../components/authentication/vendor';
 import AuthSocial from '../components/authentication/AuthSocial';
 
 // ----------------------------------------------------------------------
@@ -44,9 +44,9 @@ export default function Register() {
   return (
     <RootStyle title="Register | Minimal-UI">
       <AuthLayout>
-        Already have an account? &nbsp;
-        <Link underline="none" variant="subtitle2" component={RouterLink} to="/login">
-          Login
+        Are you a Customer? &nbsp;
+        <Link underline="none" variant="subtitle2" component={RouterLink} to="/register">
+          Register
         </Link>
       </AuthLayout>
 
@@ -72,7 +72,7 @@ export default function Register() {
 
           <AuthSocial />
 
-          <RegisterForm />
+          <RegisterVendorForm />
 
           <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>
             By registering, I agree to Minimal&nbsp;
@@ -84,6 +84,13 @@ export default function Register() {
               Privacy Policy
             </Link>
             .
+          </Typography>
+
+          <Typography variant="body1" gutterBottom sx={{ mt: 8 }}>
+            Already have an account? &nbsp;
+            <Link underline="none" variant="subtitle2" component={RouterLink} to="/login">
+              Login
+            </Link>
           </Typography>
 
           <MHidden width="smUp">

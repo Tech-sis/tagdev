@@ -11,8 +11,8 @@ import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // logic
-import { addDoc, collection } from 'firebase/firestore';
-import { signUp, auth, db } from '../../../firebase';
+import { collection, addDoc } from 'firebase/firestore';
+import { signUp, db, auth } from '../../../firebase';
 
 // ----------------------------------------------------------------------
 
@@ -27,33 +27,46 @@ export default function RegisterForm() {
       .max(50, 'Too Long!')
       .required('First name required'),
     lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
+    phoneNumber: Yup.string()
+      .min(10, 'Too Short!')
+      .max(15, 'Too Long!')
+      .required('Phone Number is required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required')
+    password: Yup.string().required('Password is required'),
+    companyName: Yup.string().required('Company Name is required'),
+    companyAddress: Yup.string().required('Company Address is required')
   });
 
   // eslint-disable-next-line no-undef
+
   const userRef = collection(db, 'users');
 
   const formik = useFormik({
     initialValues: {
       firstName: '',
       lastName: '',
+      phoneNumber: '',
       email: '',
-      password: ''
+      password: '',
+      companyName: '',
+      companyAddress: ''
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values) => {
       console.log(values);
+
       try {
         await signUp(values.email, values.password);
         const user = auth.currentUser;
-        console.log(user);
         await addDoc(userRef, {
           uid: user.uid,
-          displayName: `${values.firstName} ${values.lastName}`,
           email: user.email,
-          phoneNumber: user.phoneNumber,
-          role: 'customer'
+          displayName: `${values.firstName} ${values.lastName}`,
+          photoURL: user.photoURL,
+          companyName: values.companyName,
+          companyAddress: values.companyAddress,
+          role: 'vendor',
+          createdAt: new Date()
         });
         navigate('/dashboard');
       } catch (err) {
@@ -88,6 +101,16 @@ export default function RegisterForm() {
 
           <TextField
             fullWidth
+            autoComplete="phoneNumber"
+            type="tel"
+            label="Phone Number"
+            {...getFieldProps('phoneNumber')}
+            error={Boolean(touched.phoneNumber && errors.phoneNumber)}
+            helperText={touched.phoneNumber && errors.phoneNumber}
+          />
+
+          <TextField
+            fullWidth
             autoComplete="username"
             type="email"
             label="Email address"
@@ -113,6 +136,26 @@ export default function RegisterForm() {
             }}
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
+          />
+
+          <TextField
+            fullWidth
+            autoComplete="companyName"
+            type="text"
+            label="Company Name"
+            {...getFieldProps('companyName')}
+            error={Boolean(touched.companyName && errors.companyName)}
+            helperText={touched.companyName && errors.companyName}
+          />
+
+          <TextField
+            fullWidth
+            autoComplete="companyAddress"
+            type="text"
+            label="Company Address"
+            {...getFieldProps('companyAddress')}
+            error={Boolean(touched.companyAddress && errors.companyAddress)}
+            helperText={touched.companyAddress && errors.companyAddress}
           />
 
           <LoadingButton

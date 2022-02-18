@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 // routes
 import Router from './routes';
 // theme
