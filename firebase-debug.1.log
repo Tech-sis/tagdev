@@ -1,0 +1,90 @@
+[debug] [2022-02-18T15:54:27.810Z] ----------------------------------------------------------------------
+[debug] [2022-02-18T15:54:27.815Z] Command:       C:\Program Files\nodejs\node.exe C:\Users\Dell\AppData\Roaming\npm\node_modules\firebase-tools\lib\bin\firebase.js init
+[debug] [2022-02-18T15:54:27.816Z] CLI Version:   10.1.4
+[debug] [2022-02-18T15:54:27.816Z] Platform:      win32
+[debug] [2022-02-18T15:54:27.816Z] Node Version:  v16.6.0
+[debug] [2022-02-18T15:54:27.818Z] Time:          Fri Feb 18 2022 16:54:27 GMT+0100 (West Africa Standard Time)
+[debug] [2022-02-18T15:54:27.818Z] ----------------------------------------------------------------------
+[debug] 
+[debug] [2022-02-18T15:54:27.855Z] > command requires scopes: ["email","openid","https://www.googleapis.com/auth/cloudplatformprojects.readonly","https://www.googleapis.com/auth/firebase","https://www.googleapis.com/auth/cloud-platform"]
+[debug] [2022-02-18T15:54:27.855Z] > authorizing via signed-in user (abilawonadeola@gmail.com)
+[info] 
+     ######## #### ########  ######## ########     ###     ######  ########
+     ##        ##  ##     ## ##       ##     ##  ##   ##  ##       ##
+     ######    ##  ########  ######   ########  #########  ######  ######
+     ##        ##  ##    ##  ##       ##     ## ##     ##       ## ##
+     ##       #### ##     ## ######## ########  ##     ##  ######  ########
+
+You're about to initialize a Firebase project in this directory:
+
+  C:\Users\Dell\Documents\material-kit-react-main
+
+[info] 
+=== Account Setup
+[info] 
+[info] Which account do you want to use for this project? Choose an account or add a new one now
+[info] 
+[debug] [2022-02-18T15:54:40.254Z] setProjectAccount(C:\Users\Dell\Documents\material-kit-react-main, tagorderapp@gmail.com)
+[info] 
+[info] +  Using account: tagorderapp@gmail.com 
+[info] 
+=== Project Setup
+[info] 
+[info] First, let's associate this project directory with a Firebase project.
+[info] You can create multiple project aliases by running firebase use --add, 
+[info] but for now we'll just set up a default project.
+[info] 
+[debug] [2022-02-18T15:54:42.793Z] > refreshing access token with scopes: []
+[debug] [2022-02-18T15:54:42.794Z] >>> HTTP REQUEST POST https://www.googleapis.com/oauth2/v3/token  
+ <request body omitted>
+[debug] [2022-02-18T15:54:43.332Z] <<< HTTP RESPONSE 200 {"expires":"Mon, 01 Jan 1990 00:00:00 GMT","date":"Fri, 18 Feb 2022 15:54:43 GMT","cache-control":"no-cache, no-store, max-age=0, must-revalidate","pragma":"no-cache","content-type":"application/json; charset=utf-8","vary":"X-Origin, Referer, Origin,Accept-Encoding","server":"scaffolding on HTTPServer2","x-xss-protection":"0","x-frame-options":"SAMEORIGIN","x-content-type-options":"nosniff","alt-svc":"h3=\":443\"; ma=2592000,h3-29=\":443\"; ma=2592000,h3-Q050=\":443\"; ma=2592000,h3-Q046=\":443\"; ma=2592000,h3-Q043=\":443\"; ma=2592000,quic=\":443\"; ma=2592000; v=\"46,43\"","accept-ranges":"none","transfer-encoding":"chunked"}
+[debug] [2022-02-18T15:54:43.357Z] >>> [apiv2][query] GET https://firebase.googleapis.com/v1beta1/projects pageSize=100
+[debug] [2022-02-18T15:54:43.942Z] <<< [apiv2][status] GET https://firebase.googleapis.com/v1beta1/projects 200
+[debug] [2022-02-18T15:54:43.942Z] <<< [apiv2][body] GET https://firebase.googleapis.com/v1beta1/projects [omitted]
+[info] i  Using project order-app-9863d (Order App) 
+[info] 
+=== Hosting Setup
+[info] 
+[info] Your public directory is the folder (relative to your project directory) that
+[info] will contain Hosting assets to be uploaded with firebase deploy. If you
+[info] have a build process for your assets, use your build's output directory.
+[info] 
+[debug] [2022-02-18T15:59:29.196Z] >>> [apiv2][query] GET https://www.gstatic.com/firebasejs/releases.json [none]
+[debug] [2022-02-18T15:59:29.342Z] <<< [apiv2][status] GET https://www.gstatic.com/firebasejs/releases.json 200
+[debug] [2022-02-18T15:59:29.343Z] <<< [apiv2][body] GET https://www.gstatic.com/firebasejs/releases.json {"current":{"version":"9.6.7","browserURL":"https://www.gstatic.com/firebasejs/9.6.7/firebase.js","packageURL":"https://www.gstatic.com/firebasejs/9.6.7/firebase.tgz"},"live":{"version":"9.6","browserURL":"https://www.gstatic.com/firebasejs/live/9.6/firebase.js","packageURL":"https://www.gstatic.com/firebasejs/live/9.6/firebase.tgz"},"components":{"analytics":"https://www.gstatic.com/firebasejs/9.6.7/firebase-analytics.js","app":"https://www.gstatic.com/firebasejs/9.6.7/firebase-app.js","app-check":"https://www.gstatic.com/firebasejs/9.6.7/firebase-app-check.js","auth":"https://www.gstatic.com/firebasejs/9.6.7/firebase-auth.js","auth/cordova":"https://www.gstatic.com/firebasejs/9.6.7/firebase-auth/cordova.js","auth/react-native":"https://www.gstatic.com/firebasejs/9.6.7/firebase-auth/react-native.js","functions":"https://www.gstatic.com/firebasejs/9.6.7/firebase-functions.js","firestore":"https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.js","firestore/lite":"https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore/lite.js","storage":"https://www.gstatic.com/firebasejs/9.6.7/firebase-storage.js","performance":"https://www.gstatic.com/firebasejs/9.6.7/firebase-performance.js","remote-config":"https://www.gstatic.com/firebasejs/9.6.7/firebase-remote-config.js","messaging":"https://www.gstatic.com/firebasejs/9.6.7/firebase-messaging.js","messaging/sw":"https://www.gstatic.com/firebasejs/9.6.7/firebase-messaging/sw.js","database":"https://www.gstatic.com/firebasejs/9.6.7/firebase-database.js","firestore.memory":"https://www.gstatic.com/firebasejs/9.6.7/firebase-firestore.memory.js"}}
+[info] i  Skipping write of build/index.html 
+[info] 
+[info] i  Detected a .git folder at C:\Users\Dell\Documents\material-kit-react-main 
+[info] i  Authorizing with GitHub to upload your service account to a GitHub repository's secrets store. 
+[info] 
+[info] Visit this URL on this device to log in:
+[info] https://github.com/login/oauth/authorize?client_id=89cf50f02ac6aaed3484&state=15796579&redirect_uri=http%3A%2F%2Flocalhost%3A9005&scope=read%3Auser%20repo%20public_repo
+[info] 
+[info] Waiting for authentication...
+[debug] [2022-02-18T15:59:35.576Z] >>> HTTP REQUEST POST https://github.com/login/oauth/access_token  
+ {"client_id":"89cf50f02ac6aaed3484","client_secret":"3330d14abc895d9a74d5f17cd7a00711fa2c5bf0","code":"0305222230b9476c654c","redirect_uri":"http://localhost:9005","state":"15796579"}
+[debug] [2022-02-18T15:59:36.118Z] <<< HTTP RESPONSE 200 {"server":"GitHub.com","date":"Fri, 18 Feb 2022 15:59:36 GMT","content-type":"application/json; charset=utf-8","transfer-encoding":"chunked","vary":"X-PJAX, X-PJAX-Container, Accept-Encoding, Accept, X-Requested-With","permissions-policy":"interest-cohort=()","etag":"W/\"42ae440696c2b2fadbb6162b6e7959e5\"","cache-control":"max-age=0, private, must-revalidate","strict-transport-security":"max-age=31536000; includeSubdomains; preload","x-frame-options":"deny","x-content-type-options":"nosniff","x-xss-protection":"0","referrer-policy":"origin-when-cross-origin, strict-origin-when-cross-origin","expect-ct":"max-age=2592000, report-uri=\"https://api.github.com/_private/browser/errors\"","content-security-policy":"default-src 'none'; base-uri 'self'; block-all-mixed-content; child-src github.com/assets-cdn/worker/ gist.github.com/assets-cdn/worker/; connect-src 'self' uploads.github.com objects-origin.githubusercontent.com www.githubstatus.com collector.githubapp.com collector.github.com api.github.com github-cloud.s3.amazonaws.com github-production-repository-file-5c1aeb.s3.amazonaws.com github-production-upload-manifest-file-7fdce7.s3.amazonaws.com github-production-user-asset-6210df.s3.amazonaws.com cdn.optimizely.com logx.optimizely.com/v1/events translator.github.com wss://alive.github.com; font-src github.githubassets.com; form-action 'self' github.com gist.github.com objects-origin.githubusercontent.com; frame-ancestors 'none'; frame-src render.githubusercontent.com viewscreen.githubusercontent.com notebooks.githubusercontent.com; img-src 'self' data: github.githubassets.com identicons.github.com collector.githubapp.com collector.github.com github-cloud.s3.amazonaws.com secured-user-images.githubusercontent.com/ *.githubusercontent.com; manifest-src 'self'; media-src github.com user-images.githubusercontent.com/; script-src github.githubassets.com; style-src 'unsafe-inline' github.githubassets.com; worker-src github.com/assets-cdn/worker/ gist.github.com/assets-cdn/worker/","x-github-request-id":"CD5C:FF4E:E07C35:ECA653:620FC267"}
+[debug] [2022-02-18T15:59:36.130Z] >>> [apiv2][query] GET https://api.github.com/user [none]
+[debug] [2022-02-18T15:59:36.662Z] <<< [apiv2][status] GET https://api.github.com/user 200
+[debug] [2022-02-18T15:59:36.662Z] <<< [apiv2][body] GET https://api.github.com/user {"login":"Tech-sis","id":81181176,"node_id":"MDQ6VXNlcjgxMTgxMTc2","avatar_url":"https://avatars.githubusercontent.com/u/81181176?v=4","gravatar_id":"","url":"https://api.github.com/users/Tech-sis","html_url":"https://github.com/Tech-sis","followers_url":"https://api.github.com/users/Tech-sis/followers","following_url":"https://api.github.com/users/Tech-sis/following{/other_user}","gists_url":"https://api.github.com/users/Tech-sis/gists{/gist_id}","starred_url":"https://api.github.com/users/Tech-sis/starred{/owner}{/repo}","subscriptions_url":"https://api.github.com/users/Tech-sis/subscriptions","organizations_url":"https://api.github.com/users/Tech-sis/orgs","repos_url":"https://api.github.com/users/Tech-sis/repos","events_url":"https://api.github.com/users/Tech-sis/events{/privacy}","received_events_url":"https://api.github.com/users/Tech-sis/received_events","type":"User","site_admin":false,"name":"Adeola Abilawon","company":null,"blog":"","location":"Nigeria","email":"abilawonadeola@gmail.com","hireable":null,"bio":null,"twitter_username":"profade_ola","public_repos":24,"public_gists":0,"followers":1,"following":1,"created_at":"2021-03-22T16:51:10Z","updated_at":"2022-02-16T16:26:33Z","private_gists":0,"total_private_repos":2,"owned_private_repos":0,"disk_usage":42569,"collaborators":0,"two_factor_authentication":false,"plan":{"name":"pro","space":976562499,"collaborators":0,"private_repos":9999}}
+[info] 
+[info] +  Success! Logged into GitHub as Tech-sis 
+[info] 
+[debug] [2022-02-18T16:00:15.070Z] >>> [apiv2][query] GET https://api.github.com/repos/Tech-sis/tagApp/actions/secrets/public-key type=owner
+[debug] [2022-02-18T16:00:15.544Z] <<< [apiv2][status] GET https://api.github.com/repos/Tech-sis/tagApp/actions/secrets/public-key 404
+[debug] [2022-02-18T16:00:15.544Z] <<< [apiv2][body] GET https://api.github.com/repos/Tech-sis/tagApp/actions/secrets/public-key {"message":"Not Found","documentation_url":"https://docs.github.com/rest/reference/actions#get-a-repository-public-key"}
+[debug] [2022-02-18T16:00:21.936Z] >>> [apiv2][query] GET https://api.github.com/repos/Tech-sis/tagApp/actions/secrets/public-key type=owner
+[debug] [2022-02-18T16:00:22.411Z] <<< [apiv2][status] GET https://api.github.com/repos/Tech-sis/tagApp/actions/secrets/public-key 404
+[debug] [2022-02-18T16:00:22.411Z] <<< [apiv2][body] GET https://api.github.com/repos/Tech-sis/tagApp/actions/secrets/public-key {"message":"Not Found","documentation_url":"https://docs.github.com/rest/reference/actions#get-a-repository-public-key"}
+[debug] [2022-02-18T16:00:23.508Z] >>> [apiv2][query] GET https://api.github.com/repos/Tech-sis/tagApp/actions/secrets/public-key type=owner
+[debug] [2022-02-18T16:00:23.993Z] <<< [apiv2][status] GET https://api.github.com/repos/Tech-sis/tagApp/actions/secrets/public-key 404
+[debug] [2022-02-18T16:00:23.994Z] <<< [apiv2][body] GET https://api.github.com/repos/Tech-sis/tagApp/actions/secrets/public-key {"message":"Not Found","documentation_url":"https://docs.github.com/rest/reference/actions#get-a-repository-public-key"}
+[debug] [2022-02-18T16:01:09.928Z] >>> [apiv2][query] GET https://api.github.com/repos/Tech-sis/tagApp/actions/secrets/public-key type=owner
+[debug] [2022-02-18T16:01:10.423Z] <<< [apiv2][status] GET https://api.github.com/repos/Tech-sis/tagApp/actions/secrets/public-key 404
+[debug] [2022-02-18T16:01:10.424Z] <<< [apiv2][body] GET https://api.github.com/repos/Tech-sis/tagApp/actions/secrets/public-key {"message":"Not Found","documentation_url":"https://docs.github.com/rest/reference/actions#get-a-repository-public-key"}
+[debug] [2022-02-18T16:01:25.899Z] >>> [apiv2][query] GET https://api.github.com/repos/n/actions/secrets/public-key type=owner
+[debug] [2022-02-18T16:01:26.374Z] <<< [apiv2][status] GET https://api.github.com/repos/n/actions/secrets/public-key 404
+[debug] [2022-02-18T16:01:26.374Z] <<< [apiv2][body] GET https://api.github.com/repos/n/actions/secrets/public-key {"message":"Not Found","documentation_url":"https://docs.github.com/rest"}
+[debug] [2022-02-18T16:01:27.590Z] >>> [apiv2][query] GET https://api.github.com/repos/no/actions/secrets/public-key type=owner
+[debug] [2022-02-18T16:01:28.071Z] <<< [apiv2][status] GET https://api.github.com/repos/no/actions/secrets/public-key 404
+[debug] [2022-02-18T16:01:28.071Z] <<< [apiv2][body] GET https://api.github.com/repos/no/actions/secrets/public-key {"message":"Not Found","documentation_url":"https://docs.github.com/rest"}
