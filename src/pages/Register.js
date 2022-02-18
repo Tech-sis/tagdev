@@ -44,9 +44,9 @@ export default function Register() {
   return (
     <RootStyle title="Register | Minimal-UI">
       <AuthLayout>
-        Already have an account? &nbsp;
-        <Link underline="none" variant="subtitle2" component={RouterLink} to="/login">
-          Login
+        Are you a Vendor? &nbsp;
+        <Link underline="none" variant="subtitle2" component={RouterLink} to="/register-vendor">
+          Register here
         </Link>
       </AuthLayout>
 
@@ -84,6 +84,13 @@ export default function Register() {
               Privacy Policy
             </Link>
             .
+          </Typography>
+
+          <Typography variant="body1" sx={{ mt: 8 }}>
+            Already have an account? &nbsp;
+            <Link underline="none" variant="subtitle2" component={RouterLink} to="/login">
+              Login
+            </Link>
           </Typography>
 
           <MHidden width="smUp">
