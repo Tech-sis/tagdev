@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
@@ -6,14 +7,12 @@ import twitterFill from '@iconify/icons-eva/twitter-fill';
 import facebookFill from '@iconify/icons-eva/facebook-fill';
 // material
 import { Stack, Button, Divider, Typography } from '@mui/material';
-// import { useUserAuth } from '../context/UserAuthContext';
 import { googleSignIn } from '../../firebase';
 
 // ----------------------------------------------------------------------
 
 export default function AuthSocial() {
   const [error, setError] = useState('');
-  // const { googleSignIn } = useUserAuth;
   const navigate = useNavigate();
 
   const handleGoogleSignIn = async (e) => {

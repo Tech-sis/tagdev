@@ -1,3 +1,4 @@
+/* eslint-disable prettier/prettier */
 import * as Yup from 'yup';
 import { useState } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
@@ -17,16 +18,14 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // firebase
-import { logIn, forgotPassword } from '../../../firebase';
-// import { useUserAuth } from '../../context/UserAuthContext';
+import { logIn } from '../../../firebase';
 
 // ----------------------------------------------------------------------
 
-export default function LoginForm(props) {
+export default function LoginForm() {
   const navigate = useNavigate();
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
-  // const { logIn, forgotPassword } = useUserAuth;
 
   const LoginSchema = Yup.object().shape({
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
@@ -45,21 +44,11 @@ export default function LoginForm(props) {
       try {
         await logIn(values.email, values.password);
         navigate('/dashboard');
-      } catch (error) {
-        setError(error.message);
+      } catch (err) {
+        setError(err.message);
       }
     }
   });
-
-  const handlePasswordReset = (e) => {
-    e.preventDefault();
-    try {
-      forgotPassword();
-      console.log('email sent');
-    } catch (err) {
-      console.log(err.message);
-    }
-  };
 
   const { errors, touched, values, isSubmitting, handleSubmit, getFieldProps } = formik;
 
@@ -107,7 +96,7 @@ export default function LoginForm(props) {
             label="Remember me"
           />
 
-          <Link component={RouterLink} variant="subtitle2" to="#" onClick={handlePasswordReset}>
+          <Link component={RouterLink} variant="subtitle2" to="#">
             Forgot password?
           </Link>
         </Stack>
