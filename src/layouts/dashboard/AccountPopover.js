@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import { Icon } from '@iconify/react';
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import homeFill from '@iconify/icons-eva/home-fill';
 import personFill from '@iconify/icons-eva/person-fill';
 import settings2Fill from '@iconify/icons-eva/settings-2-fill';
@@ -8,11 +8,15 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
+
+// firebase
+import { onAuthStateChanged } from 'firebase/auth';
+// import { collection, getDocs, doc } from 'firebase/firestore';
 // components
 import MenuPopover from '../../components/MenuPopover';
 //
-import account from '../../_mocks_/account';
-import { logOut } from '../../firebase';
+// import account from '../../_mocks_/account';
+import { logOut, db, auth } from '../../firebase';
 
 // ----------------------------------------------------------------------
 
@@ -40,6 +44,29 @@ export default function AccountPopover() {
   const navigate = useNavigate();
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
+  const [user, setUser] = useState([]);
+
+  // const userRef = collection(db, 'users');
+  // useEffect(() => {
+  //   const getUsers = async () => {
+  //     const data = await getDocs(userRef);
+  //     console.log(data);
+  //     setUsers(data.docs.map((doc) => doc.data({ ...doc.data(), id: doc.id })));
+  //   };
+  //   getUsers();
+  // }, []);
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      if (user) {
+        setUser(user);
+      } else {
+        setUser(null);
+      }
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   const handleOpen = () => {
     setOpen(true);
@@ -81,7 +108,13 @@ export default function AccountPopover() {
           })
         }}
       >
-        <Avatar src={account.photoURL} alt="photoURL" />
+        {/* {users.map((user) => ( */}
+        <Avatar
+          // key={user && user.id}
+          src={user && user.photoURL}
+          alt="photoURL"
+        />
+        {/* ))} */}
       </IconButton>
 
       <MenuPopover
@@ -90,14 +123,25 @@ export default function AccountPopover() {
         anchorEl={anchorRef.current}
         sx={{ width: 220 }}
       >
+        {/* {users.map((user) => ( */}
         <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle1" noWrap>
-            {account.displayName}
+          <Typography
+            // key={user && user.id}
+            variant="subtitle1"
+            noWrap
+          >
+            {user && user.displayName}
           </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+          <Typography
+            // key={user && user.id}
+            variant="body2"
+            sx={{ color: 'text.secondary' }}
+            noWrap
+          >
+            {user && user.email}
           </Typography>
         </Box>
+        {/* ))} */}
 
         <Divider sx={{ my: 1 }} />
 

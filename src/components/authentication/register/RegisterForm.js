@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
@@ -12,6 +12,7 @@ import { LoadingButton } from '@mui/lab';
 
 // logic
 import { addDoc, collection } from 'firebase/firestore';
+import { updateProfile } from 'firebase/auth';
 import { signUp, auth, db } from '../../../firebase';
 
 // ----------------------------------------------------------------------
@@ -28,7 +29,8 @@ export default function RegisterForm() {
       .required('First name required'),
     lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required')
+    password: Yup.string().required('Password is required'),
+    phoneNumber: Yup.string().required('Phone number is required')
   });
 
   // eslint-disable-next-line no-undef
@@ -39,7 +41,8 @@ export default function RegisterForm() {
       firstName: '',
       lastName: '',
       email: '',
-      password: ''
+      password: '',
+      phoneNumber: ''
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values) => {
@@ -113,6 +116,16 @@ export default function RegisterForm() {
             }}
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
+          />
+
+          <TextField
+            fullWidth
+            autoComplete="phoneNumber"
+            type="tel"
+            label="Phone number"
+            {...getFieldProps('phoneNumber')}
+            error={Boolean(touched.phoneNumber && errors.phoneNumber)}
+            helperText={touched.phoneNumber && errors.phoneNumber}
           />
 
           <LoadingButton
