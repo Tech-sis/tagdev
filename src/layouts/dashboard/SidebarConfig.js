@@ -6,12 +6,13 @@ import fileTextFill from '@iconify/icons-eva/file-text-fill';
 import lockFill from '@iconify/icons-eva/lock-fill';
 import personAddFill from '@iconify/icons-eva/person-add-fill';
 import alertTriangleFill from '@iconify/icons-eva/alert-triangle-fill';
+// import { render } from 'react-dom';
 
 // ----------------------------------------------------------------------
 
 const getIcon = (name) => <Icon icon={name} width={22} height={22} />;
 
-const sidebarConfig = [
+export const sidebarConfig = [
   {
     title: 'dashboard',
     path: '/dashboard/app',
@@ -31,7 +32,10 @@ const sidebarConfig = [
     title: 'blog',
     path: '/dashboard/blog',
     icon: getIcon(fileTextFill)
-  },
+  }
+];
+
+export const notUserConfig = [
   {
     title: 'login',
     path: '/login',
@@ -49,4 +53,33 @@ const sidebarConfig = [
   }
 ];
 
-export default sidebarConfig;
+export const customerConfig = [
+  {
+    title: 'dashboard',
+    path: '/dashboard/app',
+    icon: getIcon(pieChart2Fill)
+  },
+  {
+    title: 'product',
+    path: '/dashboard/products',
+    icon: getIcon(shoppingBagFill)
+  },
+  {
+    title: 'blog',
+    path: '/dashboard/blog',
+    icon: getIcon(fileTextFill)
+  }
+];
+
+export const vendorConfig = [
+  {
+    title: 'dashboard',
+    path: '/dashboard/app',
+    icon: getIcon(pieChart2Fill)
+  },
+  {
+    title: 'blog',
+    path: '/dashboard/blog',
+    icon: getIcon(fileTextFill)
+  }
+];

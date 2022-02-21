@@ -36,7 +36,7 @@ export default function Router() {
         { path: 'register', element: <Register /> },
         { path: 'register-vendor', element: <VendorSignUp /> },
         { path: '404', element: <NotFound /> },
-        { path: '/', element: <Navigate to="/dashboard" /> },
+        { path: '/', element: <Navigate to="/login" /> },
         { path: '*', element: <Navigate to="/404" /> }
       ]
     },

@@ -13,8 +13,8 @@ import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 //
-import sidebarConfig from './SidebarConfig';
-import account from '../../_mocks_/account';
+import { sidebarConfig, notUserConfig } from './SidebarConfig';
+// import account from '../../_mocks_/account';
 
 // ----------------------------------------------------------------------
 
@@ -66,6 +66,8 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     };
   }, []);
 
+  const navConfig = user ? sidebarConfig : notUserConfig;
+
   const renderContent = (
     <Scrollbar
       sx={{
@@ -78,7 +80,6 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           <Logo />
         </Box>
       </Box>
-
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
@@ -94,11 +95,8 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           </AccountStyle>
         </Link>
       </Box>
-
-      <NavSection navConfig={sidebarConfig} />
-
+      <NavSection navConfig={navConfig} />
       <Box sx={{ flexGrow: 1 }} />
-
       <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
         <Stack
           alignItems="center"

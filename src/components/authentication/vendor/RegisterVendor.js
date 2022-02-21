@@ -22,11 +22,6 @@ export default function RegisterForm() {
   const [error, setError] = useState('');
 
   const RegisterSchema = Yup.object().shape({
-    firstName: Yup.string()
-      .min(2, 'Too Short!')
-      .max(50, 'Too Long!')
-      .required('First name required'),
-    lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
     phoneNumber: Yup.string()
       .min(10, 'Too Short!')
       .max(15, 'Too Long!')
@@ -43,8 +38,6 @@ export default function RegisterForm() {
 
   const formik = useFormik({
     initialValues: {
-      firstName: '',
-      lastName: '',
       phoneNumber: '',
       email: '',
       password: '',
@@ -60,13 +53,14 @@ export default function RegisterForm() {
         const user = auth.currentUser;
         await addDoc(userRef, {
           uid: user.uid,
-          email: user.email,
-          displayName: `${values.firstName} ${values.lastName}`,
+          email: values.email,
+          password: values.password,
           photoURL: user.photoURL,
+          phoneNumber: values.phoneNumber,
           companyName: values.companyName,
           companyAddress: values.companyAddress,
-          role: 'vendor',
-          createdAt: new Date()
+          userType: 'vendor',
+          createdAt: new Date().toISOString()
         });
         navigate('/dashboard');
       } catch (err) {
@@ -81,24 +75,25 @@ export default function RegisterForm() {
     <FormikProvider value={formik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
-          <Stack direction={{ xs: 'column', sm: 'row' }} spacing={2}>
-            <TextField
-              fullWidth
-              label="First name"
-              {...getFieldProps('firstName')}
-              error={Boolean(touched.firstName && errors.firstName)}
-              helperText={touched.firstName && errors.firstName}
-            />
+          <TextField
+            fullWidth
+            autoComplete="companyName"
+            type="text"
+            label="Company Name"
+            {...getFieldProps('companyName')}
+            error={Boolean(touched.companyName && errors.companyName)}
+            helperText={touched.companyName && errors.companyName}
+          />
 
-            <TextField
-              fullWidth
-              label="Last name"
-              {...getFieldProps('lastName')}
-              error={Boolean(touched.lastName && errors.lastName)}
-              helperText={touched.lastName && errors.lastName}
-            />
-          </Stack>
-
+          <TextField
+            fullWidth
+            autoComplete="companyAddress"
+            type="text"
+            label="Company Address"
+            {...getFieldProps('companyAddress')}
+            error={Boolean(touched.companyAddress && errors.companyAddress)}
+            helperText={touched.companyAddress && errors.companyAddress}
+          />
           <TextField
             fullWidth
             autoComplete="phoneNumber"
@@ -136,26 +131,6 @@ export default function RegisterForm() {
             }}
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
-          />
-
-          <TextField
-            fullWidth
-            autoComplete="companyName"
-            type="text"
-            label="Company Name"
-            {...getFieldProps('companyName')}
-            error={Boolean(touched.companyName && errors.companyName)}
-            helperText={touched.companyName && errors.companyName}
-          />
-
-          <TextField
-            fullWidth
-            autoComplete="companyAddress"
-            type="text"
-            label="Company Address"
-            {...getFieldProps('companyAddress')}
-            error={Boolean(touched.companyAddress && errors.companyAddress)}
-            helperText={touched.companyAddress && errors.companyAddress}
           />
 
           <LoadingButton

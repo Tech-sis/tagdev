@@ -13,6 +13,7 @@ import {
   updateProfile
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
+import sidebarConfig from './layouts/dashboard/SidebarConfig';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAF1xJWRo8VtDMAZLW9N7J_c7Au6sRmMwM',
@@ -33,7 +34,7 @@ export const db = getFirestore(app);
 //   setUser(currentUser);
 // });
 
-export function signUp(email, password) {
+export async function signUp(email, password) {
   return createUserWithEmailAndPassword(auth, email, password);
 }
 
@@ -52,5 +53,11 @@ export function logOut() {
 export function forgotPassword(email) {
   return sendPasswordResetEmail(auth, email);
 }
+
+onAuthStateChanged(auth, (currentUser) => {
+  console.log(currentUser);
+  // sidebarConfig(currentUser);
+  // setUser(currentUser);
+});
 
 export default app;

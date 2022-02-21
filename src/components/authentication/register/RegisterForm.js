@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as Yup from 'yup';
-import { useEffect, useState } from 'react';
+import {  useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
@@ -12,7 +12,6 @@ import { LoadingButton } from '@mui/lab';
 
 // logic
 import { addDoc, collection } from 'firebase/firestore';
-import { updateProfile } from 'firebase/auth';
 import { signUp, auth, db } from '../../../firebase';
 
 // ----------------------------------------------------------------------
@@ -50,13 +49,15 @@ export default function RegisterForm() {
       try {
         await signUp(values.email, values.password);
         const user = auth.currentUser;
-        console.log(user);
+        // console.log(user);
         await addDoc(userRef, {
           uid: user.uid,
           displayName: `${values.firstName} ${values.lastName}`,
           email: user.email,
-          phoneNumber: user.phoneNumber,
-          role: 'customer'
+          password: values.password,
+          phoneNumber: values.phoneNumber,
+          userType: 'customer',
+          createdAt: new Date().toISOString()
         });
         navigate('/dashboard');
       } catch (err) {
@@ -88,6 +89,15 @@ export default function RegisterForm() {
               helperText={touched.lastName && errors.lastName}
             />
           </Stack>
+          <TextField
+            fullWidth
+            autoComplete="phoneNumber"
+            type="tel"
+            label="Phone number"
+            {...getFieldProps('phoneNumber')}
+            error={Boolean(touched.phoneNumber && errors.phoneNumber)}
+            helperText={touched.phoneNumber && errors.phoneNumber}
+          />
 
           <TextField
             fullWidth
@@ -116,16 +126,6 @@ export default function RegisterForm() {
             }}
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
-          />
-
-          <TextField
-            fullWidth
-            autoComplete="phoneNumber"
-            type="tel"
-            label="Phone number"
-            {...getFieldProps('phoneNumber')}
-            error={Boolean(touched.phoneNumber && errors.phoneNumber)}
-            helperText={touched.phoneNumber && errors.phoneNumber}
           />
 
           <LoadingButton

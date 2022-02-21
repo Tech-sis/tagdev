@@ -70,8 +70,6 @@ export default function Register() {
             </Typography>
           </Box>
 
-          <AuthSocial />
-
           <RegisterVendorForm />
 
           <Typography variant="body2" align="center" sx={{ color: 'text.secondary', mt: 3 }}>

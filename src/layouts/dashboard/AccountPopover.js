@@ -55,6 +55,19 @@ export default function AccountPopover() {
   //   };
   //   getUsers();
   // }, []);
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       setUser(user);
+  //     } else {
+  //       setUser(null);
+  //     }
+  //   });
+  //   return () => {
+  //     unsubscribe();
+  //   };
+  // }, []);
+
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
@@ -67,6 +80,9 @@ export default function AccountPopover() {
       unsubscribe();
     };
   }, []);
+
+
+
 
   const handleOpen = () => {
     setOpen(true);
@@ -108,13 +124,7 @@ export default function AccountPopover() {
           })
         }}
       >
-        {/* {users.map((user) => ( */}
-        <Avatar
-          // key={user && user.id}
-          src={user && user.photoURL}
-          alt="photoURL"
-        />
-        {/* ))} */}
+        <Avatar src={user && user.photoURL} alt="photoURL" />
       </IconButton>
 
       <MenuPopover
@@ -123,25 +133,14 @@ export default function AccountPopover() {
         anchorEl={anchorRef.current}
         sx={{ width: 220 }}
       >
-        {/* {users.map((user) => ( */}
         <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography
-            // key={user && user.id}
-            variant="subtitle1"
-            noWrap
-          >
+          <Typography variant="subtitle1" noWrap>
             {user && user.displayName}
           </Typography>
-          <Typography
-            // key={user && user.id}
-            variant="body2"
-            sx={{ color: 'text.secondary' }}
-            noWrap
-          >
+          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
             {user && user.email}
           </Typography>
         </Box>
-        {/* ))} */}
 
         <Divider sx={{ my: 1 }} />
 
