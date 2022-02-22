@@ -12,7 +12,9 @@ import { LoadingButton } from '@mui/lab';
 
 // logic
 import { addDoc, collection } from 'firebase/firestore';
+import { sendEmailVerification, updateProfile } from 'firebase/auth';
 import { signUp, auth, db } from '../../../firebase';
+
 
 // ----------------------------------------------------------------------
 
@@ -59,12 +61,28 @@ export default function RegisterForm() {
           userType: 'customer',
           createdAt: new Date().toISOString()
         });
+        await updateProfile(auth.currentUser, {
+          displayName: `${values.firstName} ${values.lastName}`
+        }).then(() => {
+          console.log('Profile updated');
+        }).catch((error) => {
+          console.log(error);
+        });
+        await sendEmailVerification(auth.currentUser).then(() => {
+          console.log('Email sent');
+        }).catch((error) => {
+          console.log(error);
+        });
         navigate('/dashboard');
       } catch (err) {
         setError(err.message);
       }
     }
   });
+
+
+
+
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
