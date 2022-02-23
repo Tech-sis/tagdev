@@ -31,7 +31,7 @@ export default function AuthSocial() {
         photoURL: user.photoURL,
         userType: 'customer'
       });
-      navigate('/dashboard');
+      navigate('/dashboard/app');
     } catch (err) {
       setError(err.message);
     }

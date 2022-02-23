@@ -74,7 +74,7 @@ export default function RegisterForm() {
         }).catch((error) => {
           console.log(error);
         });
-        navigate('/dashboard');
+        navigate('/dashboard/app');
       } catch (err) {
         setError(err.message);
       }

@@ -43,7 +43,7 @@ export default function LoginForm() {
       console.log(values);
       try {
         await logIn(values.email, values.password);
-        navigate('/dashboard');
+        navigate('/dashboard/app');
       } catch (err) {
         setError(err.message);
       }

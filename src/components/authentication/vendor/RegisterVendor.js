@@ -62,7 +62,7 @@ export default function RegisterForm() {
           userType: 'vendor',
           createdAt: new Date().toISOString()
         });
-        navigate('/dashboard');
+        navigate('/dashboard/app');
       } catch (err) {
         setError(err.message);
       }
