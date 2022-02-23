@@ -16,7 +16,7 @@ import { onAuthStateChanged } from 'firebase/auth';
 import MenuPopover from '../../components/MenuPopover';
 //
 // import account from '../../_mocks_/account';
-import { logOut, db, auth } from '../../firebase';
+import { logOut, auth } from '../../firebase';
 
 // ----------------------------------------------------------------------
 

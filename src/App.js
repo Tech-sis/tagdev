@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 // routes
-import { Routes, Route } from 'react-router-dom';
+// import { Routes, Route } from 'react-router-dom';
 import Router from './routes';
 // theme
 import ThemeConfig from './theme';

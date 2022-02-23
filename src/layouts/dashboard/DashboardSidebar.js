@@ -6,14 +6,15 @@ import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
 
 import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../../firebase';
+import { collection, getDoc, doc } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
 // components
 import Logo from '../../components/Logo';
 import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 //
-import { sidebarConfig, notUserConfig } from './SidebarConfig';
+import { sidebarConfig, notUserConfig, customerConfig, vendorConfig } from './SidebarConfig';
 // import account from '../../_mocks_/account';
 
 // ----------------------------------------------------------------------
@@ -65,6 +66,17 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       unsubscribe();
     };
   }, []);
+
+  // let navConfig = user ? sidebarConfig : notUserConfig;
+  // if (user.userType === 'admin') {
+  //   navConfig = sidebarConfig;
+  // } else if (user.userType === 'vendor') {
+  //   navConfig = vendorConfig;
+  // } else if (user.userType === 'customer') {
+  //   navConfig = customerConfig;
+  // } else {
+  //   navConfig = notUserConfig;
+  // }
 
   const navConfig = user ? sidebarConfig : notUserConfig;
 

@@ -1,5 +1,4 @@
 /* eslint-disable prettier/prettier */
-import { useState, useEffect } from 'react';
 import { initializeApp } from 'firebase/app';
 import {
   getAuth,
@@ -10,10 +9,8 @@ import {
   GoogleAuthProvider,
   signInWithPopup,
   sendPasswordResetEmail,
-  updateProfile
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
-import sidebarConfig from './layouts/dashboard/SidebarConfig';
 
 const firebaseConfig = {
   apiKey: 'AIzaSyAF1xJWRo8VtDMAZLW9N7J_c7Au6sRmMwM',

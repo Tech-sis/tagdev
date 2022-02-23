@@ -62,7 +62,8 @@ export default function RegisterForm() {
           createdAt: new Date().toISOString()
         });
         await updateProfile(auth.currentUser, {
-          displayName: `${values.firstName} ${values.lastName}`
+          displayName: `${values.firstName} ${values.lastName}`,
+          phoneNumber: values.phoneNumber
         }).then(() => {
           console.log('Profile updated');
         }).catch((error) => {
@@ -79,10 +80,6 @@ export default function RegisterForm() {
       }
     }
   });
-
-
-
-
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
