@@ -77,6 +77,7 @@ export default function AccountPopover() {
       }
     });
     return () => {
+      setUser(null);
       unsubscribe();
     };
   }, []);

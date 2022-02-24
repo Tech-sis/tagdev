@@ -1,13 +1,9 @@
-import { Navigate, Outlet } from 'react-router-dom';
+import React from 'react';
+import { Navigate } from 'react-router-dom';
+import { auth } from './firebase';
 
-const useAuth = () => {
-  const user = { loggedIn: false };
-  return user && user.loggedIn;
-};
+export function ProtectedRoute({ children }) {
+  const isAuth = auth.currentUser !== null;
 
-const ProtectedRoutes = () => {
-  const isAuth = useAuth();
-  return isAuth ? <Outlet /> : <Navigate to="/login" />;
-};
-
-export default ProtectedRoutes;
+  return isAuth ? children : <Navigate to="/login" />;
+}

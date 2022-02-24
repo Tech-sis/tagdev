@@ -6,15 +6,15 @@ import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
 
 import { onAuthStateChanged } from 'firebase/auth';
-import { collection, getDoc, doc } from 'firebase/firestore';
-import { auth, db } from '../../firebase';
+// import { collection, getDoc, doc } from 'firebase/firestore';
+import { auth } from '../../firebase';
 // components
 import Logo from '../../components/Logo';
 import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 //
-import { sidebarConfig, notUserConfig, customerConfig, vendorConfig } from './SidebarConfig';
+import { sidebarConfig, notUserConfig } from './SidebarConfig';
 // import account from '../../_mocks_/account';
 
 // ----------------------------------------------------------------------
@@ -63,6 +63,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       }
     });
     return () => {
+      setUser(null);
       unsubscribe();
     };
   }, []);
