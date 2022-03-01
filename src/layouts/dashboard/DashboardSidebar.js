@@ -14,7 +14,7 @@ import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 //
-import { sidebarConfig, notUserConfig } from './SidebarConfig';
+import { sidebarConfig, notUserConfig, vendorConfig, customerConfig } from './SidebarConfig';
 // import account from '../../_mocks_/account';
 
 // ----------------------------------------------------------------------
@@ -45,7 +45,8 @@ DashboardSidebar.propTypes = {
 
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
-  const [user, setUser] = useState([]);
+  const [sidebar, setSidebar] = useState([]);
+  // const [user, setUser] = useState([]);
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -54,32 +55,76 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
+  // useEffect(() => {
+  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
+  //     if (user) {
+  //       setUser(user);
+  //     } else {
+  //       setUser(null);
+  //     }
+  //   });
+  //   return () => {
+  //     setUser(null);
+  //     unsubscribe();
+  //   };
+  // }, []);
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  // console.log(user);
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    });
-    return () => {
-      setUser(null);
-      unsubscribe();
-    };
-  }, []);
+    // const user = localStorage.getItem('user');
+    // console.log(user?.userType);
+    // console.log(user);
+    // console.log(user?.password);
+    if (user?.userType === 'admin') {
+      setSidebar(sidebarConfig);
+    } else if (user?.userType === 'vendor') {
+      setSidebar(vendorConfig);
+    } else if (user?.userType === 'customer') {
+      setSidebar(customerConfig);
+    } else {
+      setSidebar(customerConfig);
+    }
+  }, [user]);
 
   // let navConfig = user ? sidebarConfig : notUserConfig;
-  // if (user.userType === 'admin') {
-  //   navConfig = sidebarConfig;
-  // } else if (user.userType === 'vendor') {
-  //   navConfig = vendorConfig;
-  // } else if (user.userType === 'customer') {
-  //   navConfig = customerConfig;
-  // } else {
-  //   navConfig = notUserConfig;
-  // }
+  // let navConfig;
+  // const navConfig = () => {
+  // useEffect(() => {
+  //   if (user.userType === 'vendor') {
+  //     navConfig = vendorConfig;
+  //   } else if (user.userType === 'customer') {
+  //     navConfig = customerConfig;
+  //   } else {
+  //     navConfig = sidebarConfig;
+  //   }
+  // }, [user]);
 
-  const navConfig = user ? sidebarConfig : notUserConfig;
+  // if (user.userType === 'admin') {
+  //   setSidebar(sidebarConfig);
+  // }
+  // if (user.userType === 'vendor') {
+  //   setSidebar(vendorConfig);
+  // }
+  // if (user.userType === 'customer') {
+  //   setSidebar(customerConfig);
+  // } else {
+  //   setSidebar(notUserConfig);
+  // }
+  // const navConfig = user ? sidebarConfig : notUserConfig;
+
+  // const navBar = () => {
+  //   switch (user.userType) {
+  //     case 'admin':
+  //       return sidebarConfig;
+  //     case 'vendor':
+  //       return vendorConfig;
+  //     case 'customer':
+  //       return customerConfig;
+  //     default:
+  //       return notUserConfig;
+  //   }
+  // };
 
   const renderContent = (
     <Scrollbar
@@ -96,19 +141,19 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            <Avatar src={user && user.photoURL} alt="photoURL" />
+            <Avatar src={user?.photoURL} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {user && user.displayName}
+                {`${user?.firstName} ${user?.lastName}` || user.displayName}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
-                {user && user.role}
+                {user?.userType}
               </Typography>
             </Box>
           </AccountStyle>
         </Link>
       </Box>
-      <NavSection navConfig={navConfig} />
+      <NavSection navConfig={sidebar} />
       <Box sx={{ flexGrow: 1 }} />
       <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
         <Stack

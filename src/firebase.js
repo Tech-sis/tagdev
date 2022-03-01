@@ -37,6 +37,7 @@ export async function signUp(email, password) {
 
 export function googleSignIn() {
   const googleAuthProvider = new GoogleAuthProvider();
+  console.log(googleAuthProvider);
   return signInWithPopup(auth, googleAuthProvider);
 }
 

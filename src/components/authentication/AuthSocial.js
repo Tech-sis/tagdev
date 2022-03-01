@@ -1,5 +1,5 @@
 /* eslint-disable prettier/prettier */
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Icon } from '@iconify/react';
 import googleFill from '@iconify/icons-eva/google-fill';
@@ -21,7 +21,7 @@ export default function AuthSocial() {
     try {
       await googleSignIn();
       const user = auth.currentUser;
-      console.log(user);
+      // console.log(user);
       await addDoc(userRef, {
         createdAt: new Date(),
         uid: user.uid,
@@ -31,6 +31,7 @@ export default function AuthSocial() {
         photoURL: user.photoURL,
         userType: 'customer'
       });
+      // localStorage.setItem('user', JSON.stringify(user));
       navigate('/dashboard/app');
     } catch (err) {
       setError(err.message);

@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
@@ -11,6 +11,7 @@ import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // logic
+import { updateProfile, sendEmailVerification } from 'firebase/auth';
 import { collection, addDoc } from 'firebase/firestore';
 import { signUp, db, auth } from '../../../firebase';
 
@@ -36,18 +37,18 @@ export default function RegisterForm() {
 
   const userRef = collection(db, 'users');
 
-  const formik = useFormik({
+  const vendorFormik = useFormik({
     initialValues: {
       phoneNumber: '',
       email: '',
       password: '',
       companyName: '',
-      companyAddress: ''
+      companyAddress: '',
+      userType: 'vendor'
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values) => {
       console.log(values);
-
       try {
         await signUp(values.email, values.password);
         const user = auth.currentUser;
@@ -59,20 +60,42 @@ export default function RegisterForm() {
           phoneNumber: values.phoneNumber,
           companyName: values.companyName,
           companyAddress: values.companyAddress,
-          userType: 'vendor',
+          userType: values.userType,
           createdAt: new Date().toISOString()
         });
         navigate('/dashboard/app');
-      } catch (err) {
-        setError(err.message);
+      } catch (error) {
+        setError(error.message);
       }
     }
   });
 
-  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
+  // await updateProfile({
+  //   displayName: values.companyName
+  // });
+  // await sendEmailVerification(auth.currentUser)
+  //   .then(() => {
+  //     console.log('Email sent');
+  //   })
+  // .catch((error) => {
+  //   console.log(error);
+  // });
+  //       navigate('/dashboard/app');
+  //     } catch (err) {
+  //       setError(err.message);
+  //     }
+  //   }
+  // });
+
+  useEffect(() => {
+   const vendorUser = localStorage.setItem('vendorUser', JSON.stringify(vendorFormik.values));
+    console.log(vendorUser);
+  }, [vendorFormik.values]);
+
+  const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = vendorFormik;
 
   return (
-    <FormikProvider value={formik}>
+    <FormikProvider value={vendorFormik}>
       <Form autoComplete="off" noValidate onSubmit={handleSubmit}>
         <Stack spacing={3}>
           <TextField

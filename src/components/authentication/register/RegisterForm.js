@@ -1,20 +1,29 @@
 /* eslint-disable prettier/prettier */
 import * as Yup from 'yup';
-import {  useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import { useNavigate } from 'react-router-dom';
 // material
-import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
+import {
+  Stack,
+  TextField,
+  IconButton,
+  InputAdornment,
+  Select,
+  MenuItem,
+  Box,
+  FormControl,
+  InputLabel
+} from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // logic
 import { addDoc, collection } from 'firebase/firestore';
 import { sendEmailVerification, updateProfile } from 'firebase/auth';
 import { signUp, auth, db } from '../../../firebase';
-
 
 // ----------------------------------------------------------------------
 
@@ -31,7 +40,8 @@ export default function RegisterForm() {
     lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
     password: Yup.string().required('Password is required'),
-    phoneNumber: Yup.string().required('Phone number is required')
+    phoneNumber: Yup.string().required('Phone number is required'),
+    userType: Yup.string().required('User type is required')
   });
 
   // eslint-disable-next-line no-undef
@@ -43,7 +53,8 @@ export default function RegisterForm() {
       lastName: '',
       email: '',
       password: '',
-      phoneNumber: ''
+      phoneNumber: '',
+      userType: ''
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values) => {
@@ -51,35 +62,44 @@ export default function RegisterForm() {
       try {
         await signUp(values.email, values.password);
         const user = auth.currentUser;
-        // console.log(user);
         await addDoc(userRef, {
           uid: user.uid,
           displayName: `${values.firstName} ${values.lastName}`,
           email: user.email,
           password: values.password,
           phoneNumber: values.phoneNumber,
-          userType: 'customer',
+          userType: values.userType,
           createdAt: new Date().toISOString()
         });
         await updateProfile(auth.currentUser, {
           displayName: `${values.firstName} ${values.lastName}`,
           phoneNumber: values.phoneNumber
-        }).then(() => {
-          console.log('Profile updated');
-        }).catch((error) => {
-          console.log(error);
-        });
-        await sendEmailVerification(auth.currentUser).then(() => {
-          console.log('Email sent');
-        }).catch((error) => {
-          console.log(error);
-        });
+        })
+          .then(() => {
+            console.log('Profile updated');
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        await sendEmailVerification(auth.currentUser)
+          .then(() => {
+            console.log('Email sent');
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         navigate('/dashboard/app');
       } catch (err) {
         setError(err.message);
       }
     }
   });
+
+  useEffect(() => {
+    localStorage.setItem('user', JSON.stringify(formik.values));
+    // console.log(storeUser);
+  }, [formik.values]);
+
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
@@ -113,6 +133,21 @@ export default function RegisterForm() {
             error={Boolean(touched.phoneNumber && errors.phoneNumber)}
             helperText={touched.phoneNumber && errors.phoneNumber}
           />
+          <Box sx={{ minWidth: 120 }}>
+            <FormControl fullWidth>
+              <InputLabel id="demo-simple-select-label">Role</InputLabel>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                label="Age"
+                {...getFieldProps('userType')}
+                error={Boolean(touched.userType && errors.userType)}
+                // helperText={touched.userType && errors.userType}
+              >
+                <MenuItem value="customer">Customer</MenuItem>
+              </Select>
+            </FormControl>
+          </Box>
 
           <TextField
             fullWidth

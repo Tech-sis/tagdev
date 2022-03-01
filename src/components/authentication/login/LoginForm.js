@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // firebase
-import { logIn, forgotPassword } from '../../../firebase';
+import { logIn, forgotPassword, auth } from '../../../firebase';
 
 // ----------------------------------------------------------------------
 
