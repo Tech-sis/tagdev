@@ -48,7 +48,7 @@ export default function RegisterForm() {
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values) => {
-      console.log(values);
+      // console.log(values);
       try {
         await signUp(values.email, values.password);
         const user = auth.currentUser;
@@ -63,33 +63,32 @@ export default function RegisterForm() {
           userType: values.userType,
           createdAt: new Date().toISOString()
         });
+        await updateProfile(auth.currentUser, {
+          displayName: values.companyName
+        })
+          .then(() => {
+            console.log('profile updated');
+          })
+          .catch((error) => {
+            console.log(error);
+          });
+        await sendEmailVerification(auth.currentUser)
+          .then(() => {
+            console.log('Email sent');
+          })
+          .catch((error) => {
+            console.log(error);
+          });
         navigate('/dashboard/app');
-      } catch (error) {
-        setError(error.message);
+      } catch (err) {
+        setError(err.message);
       }
     }
   });
 
-  // await updateProfile({
-  //   displayName: values.companyName
-  // });
-  // await sendEmailVerification(auth.currentUser)
-  //   .then(() => {
-  //     console.log('Email sent');
-  //   })
-  // .catch((error) => {
-  //   console.log(error);
-  // });
-  //       navigate('/dashboard/app');
-  //     } catch (err) {
-  //       setError(err.message);
-  //     }
-  //   }
-  // });
-
   useEffect(() => {
-   const vendorUser = localStorage.setItem('vendorUser', JSON.stringify(vendorFormik.values));
-    console.log(vendorUser);
+    localStorage.setItem('user', JSON.stringify(vendorFormik.values));
+    // console.log(vendorUser);
   }, [vendorFormik.values]);
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = vendorFormik;

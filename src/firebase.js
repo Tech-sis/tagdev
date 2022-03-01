@@ -8,7 +8,7 @@ import {
   onAuthStateChanged,
   GoogleAuthProvider,
   signInWithPopup,
-  sendPasswordResetEmail,
+  sendPasswordResetEmail
 } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 
@@ -37,7 +37,6 @@ export async function signUp(email, password) {
 
 export function googleSignIn() {
   const googleAuthProvider = new GoogleAuthProvider();
-  console.log(googleAuthProvider);
   return signInWithPopup(auth, googleAuthProvider);
 }
 

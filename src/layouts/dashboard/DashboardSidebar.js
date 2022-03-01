@@ -4,17 +4,13 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
-
-import { onAuthStateChanged } from 'firebase/auth';
-// import { collection, getDoc, doc } from 'firebase/firestore';
-import { auth } from '../../firebase';
 // components
 import Logo from '../../components/Logo';
 import Scrollbar from '../../components/Scrollbar';
 import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 //
-import { sidebarConfig, notUserConfig, vendorConfig, customerConfig } from './SidebarConfig';
+import { sidebarConfig, vendorConfig, customerConfig } from './SidebarConfig';
 // import account from '../../_mocks_/account';
 
 // ----------------------------------------------------------------------
@@ -46,7 +42,7 @@ DashboardSidebar.propTypes = {
 export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
   const [sidebar, setSidebar] = useState([]);
-  // const [user, setUser] = useState([]);
+  const [content, setContent] = useState([]);
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -55,76 +51,22 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       setUser(user);
-  //     } else {
-  //       setUser(null);
-  //     }
-  //   });
-  //   return () => {
-  //     setUser(null);
-  //     unsubscribe();
-  //   };
-  // }, []);
-
   const user = JSON.parse(localStorage.getItem('user'));
-  // console.log(user);
   useEffect(() => {
-    // const user = localStorage.getItem('user');
-    // console.log(user?.userType);
-    // console.log(user);
-    // console.log(user?.password);
     if (user?.userType === 'admin') {
       setSidebar(sidebarConfig);
+      setContent(user?.displayName);
     } else if (user?.userType === 'vendor') {
       setSidebar(vendorConfig);
+      setContent(user?.companyName);
     } else if (user?.userType === 'customer') {
       setSidebar(customerConfig);
+      setContent(`${user?.firstName} ${user?.lastName}`);
     } else {
       setSidebar(customerConfig);
+      setContent(user?.displayName);
     }
   }, [user]);
-
-  // let navConfig = user ? sidebarConfig : notUserConfig;
-  // let navConfig;
-  // const navConfig = () => {
-  // useEffect(() => {
-  //   if (user.userType === 'vendor') {
-  //     navConfig = vendorConfig;
-  //   } else if (user.userType === 'customer') {
-  //     navConfig = customerConfig;
-  //   } else {
-  //     navConfig = sidebarConfig;
-  //   }
-  // }, [user]);
-
-  // if (user.userType === 'admin') {
-  //   setSidebar(sidebarConfig);
-  // }
-  // if (user.userType === 'vendor') {
-  //   setSidebar(vendorConfig);
-  // }
-  // if (user.userType === 'customer') {
-  //   setSidebar(customerConfig);
-  // } else {
-  //   setSidebar(notUserConfig);
-  // }
-  // const navConfig = user ? sidebarConfig : notUserConfig;
-
-  // const navBar = () => {
-  //   switch (user.userType) {
-  //     case 'admin':
-  //       return sidebarConfig;
-  //     case 'vendor':
-  //       return vendorConfig;
-  //     case 'customer':
-  //       return customerConfig;
-  //     default:
-  //       return notUserConfig;
-  //   }
-  // };
 
   const renderContent = (
     <Scrollbar
@@ -144,7 +86,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
             <Avatar src={user?.photoURL} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {`${user?.firstName} ${user?.lastName}` || user.displayName}
+                {content}
               </Typography>
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                 {user?.userType}

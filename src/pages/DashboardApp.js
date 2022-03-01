@@ -27,7 +27,7 @@ export default function DashboardApp() {
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (user) => {
       if (user) {
-        console.log(user);
+        // console.log(user);
         setUser(user);
       } else {
         console.log('no user');

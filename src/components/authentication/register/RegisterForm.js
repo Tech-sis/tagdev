@@ -7,17 +7,7 @@ import eyeFill from '@iconify/icons-eva/eye-fill';
 import eyeOffFill from '@iconify/icons-eva/eye-off-fill';
 import { useNavigate } from 'react-router-dom';
 // material
-import {
-  Stack,
-  TextField,
-  IconButton,
-  InputAdornment,
-  Select,
-  MenuItem,
-  Box,
-  FormControl,
-  InputLabel
-} from '@mui/material';
+import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // logic
@@ -54,11 +44,11 @@ export default function RegisterForm() {
       email: '',
       password: '',
       phoneNumber: '',
-      userType: ''
+      userType: 'customer'
     },
     validationSchema: RegisterSchema,
     onSubmit: async (values) => {
-      console.log(values);
+      // console.log(values);
       try {
         await signUp(values.email, values.password);
         const user = auth.currentUser;
@@ -100,7 +90,6 @@ export default function RegisterForm() {
     // console.log(storeUser);
   }, [formik.values]);
 
-
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
   return (
@@ -133,21 +122,6 @@ export default function RegisterForm() {
             error={Boolean(touched.phoneNumber && errors.phoneNumber)}
             helperText={touched.phoneNumber && errors.phoneNumber}
           />
-          <Box sx={{ minWidth: 120 }}>
-            <FormControl fullWidth>
-              <InputLabel id="demo-simple-select-label">Role</InputLabel>
-              <Select
-                labelId="demo-simple-select-label"
-                id="demo-simple-select"
-                label="Age"
-                {...getFieldProps('userType')}
-                error={Boolean(touched.userType && errors.userType)}
-                // helperText={touched.userType && errors.userType}
-              >
-                <MenuItem value="customer">Customer</MenuItem>
-              </Select>
-            </FormControl>
-          </Box>
 
           <TextField
             fullWidth

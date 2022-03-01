@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as Yup from 'yup';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { useFormik, Form, FormikProvider } from 'formik';
 import { Icon } from '@iconify/react';
@@ -18,7 +18,7 @@ import {
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // firebase
-import { logIn, forgotPassword, auth } from '../../../firebase';
+import { logIn, forgotPassword } from '../../../firebase';
 
 // ----------------------------------------------------------------------
 
@@ -64,6 +64,10 @@ export default function LoginForm() {
   const handleShowPassword = () => {
     setShowPassword((show) => !show);
   };
+
+  useEffect(() => {
+    localStorage.getItem('user');
+  }, []);
 
   return (
     <FormikProvider value={formik}>
