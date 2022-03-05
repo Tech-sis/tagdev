@@ -11,7 +11,7 @@ import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // logic
-import { addDoc, collection } from 'firebase/firestore';
+import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
 import { sendEmailVerification, updateProfile } from 'firebase/auth';
 import { signUp, auth, db } from '../../../firebase';
 
@@ -75,6 +75,13 @@ export default function RegisterForm() {
           .then(() => {
             console.log('Email sent');
           })
+          .then(() => {
+            const docRef = doc(db, 'users', user.uid);
+            getDoc(docRef).then((doc) => {
+              console.log(doc.data(), doc.id);
+              localStorage.setItem('user', JSON.stringify(doc.data()));
+            });
+          })
           .catch((error) => {
             console.log(error);
           });
@@ -85,10 +92,10 @@ export default function RegisterForm() {
     }
   });
 
-  useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(formik.values));
-    // console.log(storeUser);
-  }, [formik.values]);
+  // useEffect(() => {
+  //   localStorage.setItem('user', JSON.stringify(formik.values));
+  //   // console.log(storeUser);
+  // }, [formik.values]);
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 

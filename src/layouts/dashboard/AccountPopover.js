@@ -98,6 +98,7 @@ export default function AccountPopover() {
       handleClose();
       navigate('/login');
       console.log('logged out');
+      localStorage.removeItem('user');
     } catch (err) {
       console.log(err.message);
     }
