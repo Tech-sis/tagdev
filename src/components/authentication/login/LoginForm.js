@@ -14,13 +14,28 @@ import {
   TextField,
   IconButton,
   InputAdornment,
-  FormControlLabel
+  FormControlLabel,
+  Typography
 } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 // firebase
 import { logIn, forgotPassword } from '../../../firebase';
 
 // ----------------------------------------------------------------------
+
+// handle auth errors
+const mapAuthCodeToMessage = (authCode) => {
+  switch (authCode) {
+    case 'auth/invalid-email':
+      return 'Invalid email';
+    case 'auth/invalid-password':
+      return 'Invalid password';
+    case 'auth/user-not-found':
+      return 'User not found';
+    default:
+      return 'Invalid password';
+  }
+};
 
 export default function LoginForm() {
   const navigate = useNavigate();
@@ -44,8 +59,8 @@ export default function LoginForm() {
       try {
         await logIn(values.email, values.password);
         navigate('/dashboard/app');
-      } catch (err) {
-        setError(err.message);
+      } catch (error) {
+        setError(mapAuthCodeToMessage(error.code));
       }
     }
   });
@@ -82,7 +97,9 @@ export default function LoginForm() {
             error={Boolean(touched.email && errors.email)}
             helperText={touched.email && errors.email}
           />
-
+          <Typography variant="caption" color="error">
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+          </Typography>
           <TextField
             fullWidth
             autoComplete="current-password"
@@ -101,6 +118,9 @@ export default function LoginForm() {
             error={Boolean(touched.password && errors.password)}
             helperText={touched.password && errors.password}
           />
+          <Typography variant="caption" color="error">
+            {error && <p style={{ color: 'red' }}>{error}</p>}
+          </Typography>
         </Stack>
 
         <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>

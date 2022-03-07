@@ -29,7 +29,10 @@ export default function RegisterForm() {
       .required('First name required'),
     lastName: Yup.string().min(2, 'Too Short!').max(50, 'Too Long!').required('Last name required'),
     email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    password: Yup.string()
+      .required('Password is required')
+      .min(6, 'Password must be at least 6 characters')
+      .max(50, 'Password must be less than 50 characters'),
     phoneNumber: Yup.string().required('Phone number is required'),
     userType: Yup.string().required('User type is required')
   });
@@ -71,20 +74,9 @@ export default function RegisterForm() {
           .catch((error) => {
             console.log(error);
           });
-        await sendEmailVerification(auth.currentUser)
-          .then(() => {
-            console.log('Email sent');
-          })
-          .then(() => {
-            const docRef = doc(db, 'users', user.uid);
-            getDoc(docRef).then((doc) => {
-              console.log(doc.data(), doc.id);
-              localStorage.setItem('user', JSON.stringify(doc.data()));
-            });
-          })
-          .catch((error) => {
-            console.log(error);
-          });
+        await sendEmailVerification(auth.currentUser).then(() => {
+          console.log('Email sent');
+        });
         navigate('/dashboard/app');
       } catch (err) {
         setError(err.message);
@@ -92,10 +84,10 @@ export default function RegisterForm() {
     }
   });
 
-  // useEffect(() => {
-  //   localStorage.setItem('user', JSON.stringify(formik.values));
-  //   // console.log(storeUser);
-  // }, [formik.values]);
+  useEffect(() => {
+    localStorage.setItem('user', JSON.stringify(formik.values));
+    // console.log(storeUser);
+  }, [formik.values]);
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 
