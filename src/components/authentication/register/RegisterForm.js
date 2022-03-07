@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as Yup from 'yup';
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
@@ -11,7 +11,7 @@ import { Stack, TextField, IconButton, InputAdornment } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
 
 // logic
-import { addDoc, collection, doc, getDoc } from 'firebase/firestore';
+import { addDoc, collection } from 'firebase/firestore';
 import { sendEmailVerification, updateProfile } from 'firebase/auth';
 import { signUp, auth, db } from '../../../firebase';
 
@@ -77,17 +77,13 @@ export default function RegisterForm() {
         await sendEmailVerification(auth.currentUser).then(() => {
           console.log('Email sent');
         });
+        // loading ? navigate('/dashboard/app') : null;
         navigate('/dashboard/app');
       } catch (err) {
         setError(err.message);
       }
     }
   });
-
-  useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(formik.values));
-    // console.log(storeUser);
-  }, [formik.values]);
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = formik;
 

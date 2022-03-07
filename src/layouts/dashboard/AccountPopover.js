@@ -9,14 +9,11 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
 
-// firebase
-import { onAuthStateChanged } from 'firebase/auth';
-// import { collection, getDocs, doc } from 'firebase/firestore';
 // components
 import MenuPopover from '../../components/MenuPopover';
 //
 // import account from '../../_mocks_/account';
-import { logOut, auth } from '../../firebase';
+import { logOut } from '../../firebase';
 
 // ----------------------------------------------------------------------
 
@@ -44,46 +41,7 @@ export default function AccountPopover() {
   const navigate = useNavigate();
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
-  const [user, setUser] = useState([]);
-
-  // const userRef = collection(db, 'users');
-  // useEffect(() => {
-  //   const getUsers = async () => {
-  //     const data = await getDocs(userRef);
-  //     console.log(data);
-  //     setUsers(data.docs.map((doc) => doc.data({ ...doc.data(), id: doc.id })));
-  //   };
-  //   getUsers();
-  // }, []);
-  // useEffect(() => {
-  //   const unsubscribe = onAuthStateChanged(auth, (user) => {
-  //     if (user) {
-  //       setUser(user);
-  //     } else {
-  //       setUser(null);
-  //     }
-  //   });
-  //   return () => {
-  //     unsubscribe();
-  //   };
-  // }, []);
-
-  useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        setUser(user);
-      } else {
-        setUser(null);
-      }
-    });
-    return () => {
-      setUser(null);
-      unsubscribe();
-    };
-  }, []);
-
-
-
+  const [name, setName] = useState([]);
 
   const handleOpen = () => {
     setOpen(true);
@@ -103,6 +61,19 @@ export default function AccountPopover() {
       console.log(err.message);
     }
   };
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  useEffect(() => {
+    if (user?.userType === 'admin') {
+      setName(user?.displayName);
+    } else if (user?.userType === 'vendor') {
+      setName(user?.companyName);
+    } else if (user?.userType === 'customer') {
+      setName(user?.displayName);
+    } else {
+      setName(user?.displayName);
+    }
+  }, [user]);
 
   return (
     <>
@@ -126,7 +97,7 @@ export default function AccountPopover() {
           })
         }}
       >
-        <Avatar src={user && user.photoURL} alt="photoURL" />
+        <Avatar src={user?.photoURL} alt="photoURL" />
       </IconButton>
 
       <MenuPopover
@@ -136,11 +107,11 @@ export default function AccountPopover() {
         sx={{ width: 220 }}
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle1" noWrap>
-            {user && user.displayName}
+          <Typography variant="subtitle1" noWrap sx={{ textTransform: 'capitalize' }}>
+            {name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user && user.email}
+            {user?.email}
           </Typography>
         </Box>
 

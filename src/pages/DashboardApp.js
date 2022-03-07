@@ -1,8 +1,8 @@
 import { useState, useEffect } from 'react';
 // material
 import { Box, Grid, Container, Typography } from '@mui/material';
-import { onAuthStateChanged } from 'firebase/auth';
-import { auth } from '../firebase';
+import { getDocs, collection } from 'firebase/firestore';
+import { auth, db } from '../firebase';
 // components
 import Page from '../components/Page';
 import {
@@ -23,27 +23,65 @@ import {
 // ----------------------------------------------------------------------
 
 export default function DashboardApp() {
-  const [user, setUser] = useState([]);
+  const [name, setName] = useState([]);
+  const { currentUser } = auth;
+
   useEffect(() => {
-    const unsubscribe = onAuthStateChanged(auth, (user) => {
-      if (user) {
-        // console.log(user);
-        setUser(user);
-      } else {
-        console.log('no user');
-        setUser(null);
-      }
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      console.log(user);
+      const docRef = collection(db, 'users');
+      const getData = async () => {
+        const data = await getDocs(docRef);
+        console.log(
+          data.docs
+            .map((doc) => (doc.data().uid === currentUser?.uid ? doc.data() : null))
+            .filter((element) => element !== null)
+        );
+        const userData = data.docs
+          .map((doc) => (doc.data().uid === currentUser?.uid ? doc.data() : null))
+          .filter((element) => element !== null)[0];
+        console.log(
+          userData?.displayName,
+          userData?.email,
+          userData?.phoneNumber,
+          userData?.userType
+        );
+
+        localStorage.setItem(
+          'user',
+          JSON.stringify({
+            companyName: userData?.companyName,
+            displayName: userData?.displayName,
+            email: userData?.email,
+            userType: userData?.userType
+          })
+        );
+      };
+      getData();
     });
-    return () => {
-      unsubscribe();
-    };
+    return () => unsubscribe();
   }, []);
+
+  const user = JSON.parse(localStorage.getItem('user'));
+  useEffect(() => {
+    if (user?.userType === 'admin') {
+      setName(user?.displayName);
+    } else if (user?.userType === 'vendor') {
+      setName(user?.companyName);
+    } else if (user?.userType === 'customer') {
+      setName(user?.displayName);
+    } else {
+      setName(user?.displayName);
+    }
+  }, [user]);
 
   return (
     <Page title="Dashboard | Minimal-UI">
       <Container maxWidth="xl">
         <Box sx={{ pb: 5 }}>
-          <Typography variant="h4">Hi, {user && user.displayName}</Typography>
+          <Typography variant="h4" sx={{ textTransform: 'capitalize' }}>
+            Hi, {name}
+          </Typography>
         </Box>
         <Grid container spacing={3}>
           <Grid item xs={12} sm={6} md={3}>

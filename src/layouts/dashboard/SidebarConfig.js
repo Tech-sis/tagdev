@@ -75,9 +75,14 @@ export const customerConfig = [
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'my orders',
+    title: 'my orders details',
     path: '/dashboard/blog',
     icon: getIcon(fileTextFill)
+  },
+  {
+    title: 'customer profile',
+    path: '/dashboard/products',
+    icon: getIcon(shoppingBagFill)
   }
 ];
 
@@ -88,12 +93,17 @@ export const vendorConfig = [
     icon: getIcon(pieChart2Fill)
   },
   {
-    title: 'blog',
+    title: 'Vendor Order Page',
     path: '/dashboard/blog',
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'product',
+    title: 'vendor product',
+    path: '/dashboard/products',
+    icon: getIcon(shoppingBagFill)
+  },
+  {
+    title: 'vendor profile',
     path: '/dashboard/products',
     icon: getIcon(shoppingBagFill)
   }

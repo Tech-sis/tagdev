@@ -11,7 +11,6 @@ import NavSection from '../../components/NavSection';
 import { MHidden } from '../../components/@material-extend';
 //
 import { sidebarConfig, vendorConfig, customerConfig } from './SidebarConfig';
-// import account from '../../_mocks_/account';
 
 // ----------------------------------------------------------------------
 
@@ -61,7 +60,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       setContent(user?.companyName);
     } else if (user?.userType === 'customer') {
       setSidebar(customerConfig);
-      setContent(`${user?.firstName} ${user?.lastName}`);
+      setContent(user?.displayName);
     } else {
       setSidebar(customerConfig);
       setContent(user?.displayName);
@@ -85,10 +84,16 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
           <AccountStyle>
             <Avatar src={user?.photoURL} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
-              <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
+              <Typography
+                variant="subtitle2"
+                sx={{ color: 'text.primary', textTransform: 'capitalize' }}
+              >
                 {content}
               </Typography>
-              <Typography variant="body2" sx={{ color: 'text.secondary' }}>
+              <Typography
+                variant="body2"
+                sx={{ color: 'text.secondary', textTransform: 'capitalize' }}
+              >
                 {user?.userType}
               </Typography>
             </Box>
