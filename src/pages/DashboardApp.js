@@ -47,33 +47,34 @@ export default function DashboardApp() {
           userData?.userType
         );
 
+        if (userData?.userType === 'admin') {
+          setName(userData?.displayName);
+        } else if (userData?.userType === 'vendor') {
+          setName(userData?.companyName);
+        } else if (userData?.userType === 'customer') {
+          setName(userData?.displayName);
+        } else {
+          setName(userData?.displayName);
+        }
+
         localStorage.setItem(
           'user',
           JSON.stringify({
             companyName: userData?.companyName,
             displayName: userData?.displayName,
             email: userData?.email,
-            userType: userData?.userType
+            userType: userData?.userType,
+            photoURL: userData?.photoURL
           })
         );
       };
       getData();
     });
-    return () => unsubscribe();
-  }, []);
-
-  const user = JSON.parse(localStorage.getItem('user'));
-  useEffect(() => {
-    if (user?.userType === 'admin') {
-      setName(user?.displayName);
-    } else if (user?.userType === 'vendor') {
-      setName(user?.companyName);
-    } else if (user?.userType === 'customer') {
-      setName(user?.displayName);
-    } else {
-      setName(user?.displayName);
-    }
-  }, [user]);
+    return () => {
+      unsubscribe();
+      setName('');
+    };
+  }, [currentUser?.uid]);
 
   return (
     <Page title="Dashboard | Minimal-UI">

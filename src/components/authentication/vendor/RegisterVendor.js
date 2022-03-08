@@ -1,6 +1,6 @@
 /* eslint-disable prettier/prettier */
 import * as Yup from 'yup';
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { Icon } from '@iconify/react';
 import { useFormik, Form, FormikProvider } from 'formik';
 import eyeFill from '@iconify/icons-eva/eye-fill';
@@ -86,10 +86,10 @@ export default function RegisterForm() {
     }
   });
 
-  useEffect(() => {
-    localStorage.setItem('user', JSON.stringify(vendorFormik.values));
-    // console.log(vendorUser);
-  }, [vendorFormik.values]);
+  // useEffect(() => {
+  //   localStorage.setItem('user', JSON.stringify(vendorFormik.values));
+  //   // console.log(vendorUser);
+  // }, [vendorFormik.values]);
 
   const { errors, touched, handleSubmit, isSubmitting, getFieldProps } = vendorFormik;
 

@@ -19,7 +19,7 @@ export const sidebarConfig = [
     icon: getIcon(pieChart2Fill)
   },
   {
-    title: 'sll customers',
+    title: 'all customers',
     path: '/dashboard/user',
     icon: getIcon(peopleFill)
   },
@@ -29,7 +29,7 @@ export const sidebarConfig = [
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'product',
+    title: 'products',
     path: '/dashboard/products',
     icon: getIcon(shoppingBagFill)
   },
@@ -75,12 +75,12 @@ export const customerConfig = [
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'my orders details',
+    title: 'my order details',
     path: '/dashboard/blog',
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'customer profile',
+    title: 'my customer profile',
     path: '/dashboard/products',
     icon: getIcon(shoppingBagFill)
   }
@@ -93,17 +93,17 @@ export const vendorConfig = [
     icon: getIcon(pieChart2Fill)
   },
   {
-    title: 'Vendor Order Page',
+    title: 'Vendor Order review',
     path: '/dashboard/blog',
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'vendor product',
+    title: 'past orders',
     path: '/dashboard/products',
     icon: getIcon(shoppingBagFill)
   },
   {
-    title: 'vendor profile',
+    title: 'my vendor profile',
     path: '/dashboard/products',
     icon: getIcon(shoppingBagFill)
   }

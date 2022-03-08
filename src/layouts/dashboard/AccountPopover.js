@@ -51,6 +51,8 @@ export default function AccountPopover() {
   };
   const handleLogOut = async (e) => {
     e.preventDefault();
+    setOpen(false);
+    setName([]);
     try {
       await logOut();
       handleClose();
