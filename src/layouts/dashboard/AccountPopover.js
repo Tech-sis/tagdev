@@ -8,12 +8,11 @@ import { Link as RouterLink, useNavigate } from 'react-router-dom';
 // material
 import { alpha } from '@mui/material/styles';
 import { Button, Box, Divider, MenuItem, Typography, Avatar, IconButton } from '@mui/material';
-
+// firebase
+import { getDocs, collection } from 'firebase/firestore';
+import { auth, db, logOut } from '../../firebase';
 // components
 import MenuPopover from '../../components/MenuPopover';
-//
-// import account from '../../_mocks_/account';
-import { logOut } from '../../firebase';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +41,8 @@ export default function AccountPopover() {
   const anchorRef = useRef(null);
   const [open, setOpen] = useState(false);
   const [name, setName] = useState([]);
+  const [email, setEmail] = useState([]);
+  const [photo, setPhoto] = useState('');
 
   const handleOpen = () => {
     setOpen(true);
@@ -64,18 +65,38 @@ export default function AccountPopover() {
     }
   };
 
-  const user = JSON.parse(localStorage.getItem('user'));
   useEffect(() => {
-    if (user?.userType === 'admin') {
-      setName(user?.displayName);
-    } else if (user?.userType === 'vendor') {
-      setName(user?.companyName);
-    } else if (user?.userType === 'customer') {
-      setName(user?.displayName);
-    } else {
-      setName(user?.displayName);
-    }
-  }, [user]);
+    const unsubscribe = auth.onAuthStateChanged((user) => {
+      const docRef = collection(db, 'users');
+      const getData = async () => {
+        const data = await getDocs(docRef);
+        const userData = data.docs
+          .map((doc) => (doc.data().uid === user?.uid ? doc.data() : null))
+          .filter((element) => element !== null)[0];
+        console.log(userData?.userType);
+
+        if (userData?.userType === 'admin') {
+          setName(userData?.displayName);
+          setEmail(user?.email);
+          setPhoto(user?.photoURL);
+        } else if (userData?.userType === 'vendor') {
+          setName(userData?.companyName);
+          setEmail(user?.email);
+          setPhoto(user?.photoURL);
+        } else if (userData?.userType === 'customer') {
+          setName(userData?.displayName);
+          setEmail(user?.email);
+          setPhoto(user?.photoURL);
+        } else {
+          setName(user?.displayName);
+        }
+      };
+      getData();
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
 
   return (
     <>
@@ -99,7 +120,7 @@ export default function AccountPopover() {
           })
         }}
       >
-        <Avatar src={user?.photoURL} alt="photoURL" />
+        <Avatar src={photo} alt="photoURL" />
       </IconButton>
 
       <MenuPopover
@@ -113,7 +134,7 @@ export default function AccountPopover() {
             {name}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {user?.email}
+            {email}
           </Typography>
         </Box>
 

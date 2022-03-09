@@ -19,6 +19,8 @@ import {
   AppCurrentSubject,
   AppConversionRates
 } from '../components/_dashboard/app';
+//
+// import { useProfileContext } from '../components/context/ProfileContext';
 
 // ----------------------------------------------------------------------
 
@@ -28,7 +30,6 @@ export default function DashboardApp() {
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
-      console.log(user);
       const docRef = collection(db, 'users');
       const getData = async () => {
         const data = await getDocs(docRef);
@@ -63,7 +64,7 @@ export default function DashboardApp() {
             companyName: userData?.companyName,
             displayName: userData?.displayName,
             email: userData?.email,
-            userType: userData?.userType,
+            phoneNumber: userData?.phoneNumber,
             photoURL: userData?.photoURL
           })
         );
@@ -72,7 +73,6 @@ export default function DashboardApp() {
     });
     return () => {
       unsubscribe();
-      setName('');
     };
   }, [currentUser?.uid]);
 

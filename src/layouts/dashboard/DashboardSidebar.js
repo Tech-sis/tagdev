@@ -4,6 +4,9 @@ import { Link as RouterLink, useLocation } from 'react-router-dom';
 // material
 import { styled } from '@mui/material/styles';
 import { Box, Link, Button, Drawer, Typography, Avatar, Stack } from '@mui/material';
+// firebase
+import { getDocs, collection } from 'firebase/firestore';
+import { auth, db } from '../../firebase';
 // components
 import Logo from '../../components/Logo';
 import Scrollbar from '../../components/Scrollbar';
@@ -42,6 +45,8 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
   const { pathname } = useLocation();
   const [sidebar, setSidebar] = useState([]);
   const [content, setContent] = useState([]);
+  const [role, setRole] = useState([]);
+  const [photo, setPhoto] = useState('');
 
   useEffect(() => {
     if (isOpenSidebar) {
@@ -50,22 +55,56 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
-  const user = JSON.parse(localStorage.getItem('user'));
   useEffect(() => {
-    if (user?.userType === 'admin') {
-      setSidebar(sidebarConfig);
-      setContent(user?.displayName);
-    } else if (user?.userType === 'vendor') {
-      setSidebar(vendorConfig);
-      setContent(user?.companyName);
-    } else if (user?.userType === 'customer') {
-      setSidebar(customerConfig);
-      setContent(user?.displayName);
-    } else {
-      setSidebar(customerConfig);
-      setContent(user?.displayName);
-    }
-  }, [user]);
+    const unsubscribe = auth.onAuthStateChanged(() => {
+      const { currentUser } = auth;
+      const docRef = collection(db, 'users');
+      const getData = async () => {
+        const data = await getDocs(docRef);
+        console.log(
+          data.docs
+            .map((doc) => (doc.data().uid === currentUser?.uid ? doc.data() : null))
+            .filter((element) => element !== null)
+        );
+        const userData = data.docs
+          .map((doc) => (doc.data().uid === currentUser?.uid ? doc.data() : null))
+          .filter((element) => element !== null)[0];
+        const user = {
+          companyName: userData?.companyName,
+          displayName: userData?.displayName,
+          email: userData?.email,
+          phoneNumber: userData?.phoneNumber,
+          photoURL: userData?.photoURL,
+          userType: userData?.userType
+        };
+        if (user?.userType === 'admin') {
+          setSidebar(sidebarConfig);
+          setContent(user?.displayName);
+          setRole('admin');
+          setPhoto(user?.photoURL);
+        } else if (user?.userType === 'vendor') {
+          setSidebar(vendorConfig);
+          setContent(user?.companyName);
+          setRole('vendor');
+          setPhoto(user?.photoURL);
+        } else if (user?.userType === 'customer') {
+          setSidebar(customerConfig);
+          setContent(user?.displayName);
+          setRole('customer');
+          setPhoto(user?.photoURL);
+        } else {
+          setSidebar(customerConfig);
+          setContent(user?.displayName);
+          setRole('customer');
+          setPhoto(user?.photoURL);
+        }
+      };
+      getData();
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, [isOpenSidebar]);
 
   const renderContent = (
     <Scrollbar
@@ -82,7 +121,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
       <Box sx={{ mb: 5, mx: 2.5 }}>
         <Link underline="none" component={RouterLink} to="#">
           <AccountStyle>
-            <Avatar src={user?.photoURL} alt="photoURL" />
+            <Avatar src={photo} alt="photoURL" />
             <Box sx={{ ml: 2 }}>
               <Typography
                 variant="subtitle2"
@@ -94,7 +133,7 @@ export default function DashboardSidebar({ isOpenSidebar, onCloseSidebar }) {
                 variant="body2"
                 sx={{ color: 'text.secondary', textTransform: 'capitalize' }}
               >
-                {user?.userType}
+                {role}
               </Typography>
             </Box>
           </AccountStyle>
