@@ -76,12 +76,12 @@ export const customerConfig = [
   },
   {
     title: 'my order details',
-    path: '/dashboard/blog',
+    path: '/dashboard/products',
     icon: getIcon(fileTextFill)
   },
   {
     title: 'my customer profile',
-    path: '/dashboard/products',
+    path: '/dashboard/profile',
     icon: getIcon(shoppingBagFill)
   }
 ];
