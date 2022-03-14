@@ -12,6 +12,7 @@ import Products from './pages/Products';
 import Blog from './pages/Blog';
 import User from './pages/User';
 import NotFound from './pages/Page404';
+import COrderHistory from './pages/COrderHistory';
 import { ProtectedRoute } from './ProtectedRoutes';
 
 // ----------------------------------------------------------------------
@@ -20,14 +21,19 @@ export default function Router() {
   return useRoutes([
     {
       path: '/dashboard',
-      element: <ProtectedRoute> <DashboardLayout /> </ProtectedRoute>
-      ,
+      element: (
+        <ProtectedRoute>
+          {' '}
+          <DashboardLayout />{' '}
+        </ProtectedRoute>
+      ),
       children: [
         { element: <Navigate to="/dashboard/app" replace /> },
-        { path: 'app', element:  <DashboardApp /> },
+        { path: 'app', element: <DashboardApp /> },
         { path: 'user', element: <User /> },
         { path: 'products', element: <Products /> },
-        { path: 'blog', element: <Blog /> }
+        { path: 'blog', element: <Blog /> },
+        { path: 'order-history', element: <COrderHistory /> },
       ]
     },
     {

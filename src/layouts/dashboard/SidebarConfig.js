@@ -80,8 +80,8 @@ export const customerConfig = [
     icon: getIcon(fileTextFill)
   },
   {
-    title: 'my customer profile',
-    path: '/dashboard/profile',
+    title: 'my Order history',
+    path: '/dashboard/order-history',
     icon: getIcon(shoppingBagFill)
   }
 ];
