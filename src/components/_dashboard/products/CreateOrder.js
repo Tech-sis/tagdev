@@ -48,7 +48,8 @@ const CreateOrder = () => {
         description,
         productName1,
         quantity1,
-        description1
+        description1,
+        status: 'pending'
       });
       console.log('order added');
       setProductName('');

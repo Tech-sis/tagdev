@@ -96,7 +96,7 @@ export default function AccountPopover() {
     return () => {
       unsubscribe();
     };
-  }, []);
+  }, [navigate]);
 
   return (
     <>

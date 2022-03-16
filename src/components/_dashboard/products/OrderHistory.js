@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Card } from '@mui/material';
-import { DataGrid } from '@material-ui/data-grid';
+import { DataGrid } from '@mui/x-data-grid';
 import { getDocs, collection } from 'firebase/firestore';
 import { auth, db } from '../../../firebase';
 
@@ -8,28 +8,27 @@ const OrderHistory = () => {
   const [tableData, setTableData] = useState([]);
 
   const columns = [
-    { field: 'id', headerName: 'ID', width: 100 },
+    // { field: 'id', headerName: 'ID', width: 100 },
     { field: 'createdAt', headerName: 'Created At', width: 150 },
     { field: 'productName', headerName: 'Product', width: 130 },
-    { field: 'quantity', headerName: 'Quantity', type: 'number', width: 130 },
+    { field: 'quantity', headerName: 'Quantity', type: 'number', width: 100 },
     {
       field: 'description',
       headerName: 'Description',
       description: 'This column has a value getter and is not sortable.',
       sortable: false,
       width: 200
+    },
+    { field: 'productName1', headerName: 'Product name', width: 130 },
+    { field: 'quantity1', headerName: 'Quantity', type: 'number', width: 100 },
+    { field: 'description1', headerName: 'Description', width: 200 },
+    {
+      field: 'status',
+      headerName: 'Status',
+      width: 100
     }
-    // { field: 'productName1', headerName: 'Product name', width: 130 },
-    // { field: 'quantity1', headerName: 'Quantity', type: 'number', width: 130 },
-    // { field: 'description1', headerName: 'Description', width: 200 },
-    // {
-    //   field: 'status',
-    //   headerName: 'Status',
-    //   width: 100
-    // }
   ];
 
-  const { currentUser } = auth;
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
       const docRef = collection(db, 'orderDetails');
@@ -45,16 +44,6 @@ const OrderHistory = () => {
     };
   }, []);
 
-  const yourClasses = {
-    header: 'header',
-    headerCell: 'headerCell',
-    row: 'row',
-    rowCell: 'rowCell',
-    cell: 'cell',
-    footer: 'footer',
-    footerCell: 'footerCell'
-  };
-
   return (
     <>
       <Card>
@@ -62,9 +51,14 @@ const OrderHistory = () => {
           rows={tableData}
           columns={columns}
           pageSize={5}
-          rowsPerPageOptions={[5]}
+          rowsPerPageOptions={[15]}
           autoHeight
-          classes={yourClasses}
+          headerHeight={100}
+          rowHeight={50}
+          sx={{
+            height: '100%',
+            textTransform: 'uppercase'
+          }}
         />
       </Card>
     </>
