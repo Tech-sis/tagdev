@@ -9,8 +9,7 @@ import {
   // ProductList,
   // ProductCartWidget,
   // ProductFilterSidebar,
-  CreateOrder,
-  OrderHistory
+  CreateOrder
 } from '../components/_dashboard/products';
 //
 import PRODUCTS from '../_mocks_/products';
@@ -22,10 +21,9 @@ export default function EcommerceShop() {
     <Page title="Dashboard: Create order">
       <Container>
         <Typography variant="h6" sx={{ mb: 5 }}>
-          Order
+          Create New Order
         </Typography>
         <CreateOrder />
-        {/* <OrderHistory /> */}
       </Container>
     </Page>
   );

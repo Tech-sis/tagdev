@@ -31,9 +31,9 @@ export default function Router() {
         { element: <Navigate to="/dashboard/app" replace /> },
         { path: 'app', element: <DashboardApp /> },
         { path: 'user', element: <User /> },
-        { path: 'products', element: <Products /> },
+        { path: 'new-order', element: <Products /> },
         { path: 'blog', element: <Blog /> },
-        { path: 'order-history', element: <COrderHistory /> },
+        { path: 'orders', element: <COrderHistory /> },
       ]
     },
     {
