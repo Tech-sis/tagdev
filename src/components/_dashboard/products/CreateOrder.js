@@ -13,7 +13,6 @@ import {
   Alert,
   AlertTitle,
   Container,
-  Divider,
   Typography
 } from '@mui/material';
 // material icons
@@ -75,10 +74,10 @@ const CreateOrder = () => {
           description: ''
         }
       ]);
-      setStatus({ type: 'Success', message: 'Order added successfully' });
+      setStatus({ type: 'success', message: 'Order added successfully' });
     } catch (error) {
       console.log(error);
-      setStatus({ type: 'Error', message: error.message });
+      setStatus({ type: 'error', message: error.message });
     }
   };
 
@@ -107,7 +106,7 @@ const CreateOrder = () => {
             {inputFields.map((inputField, index) => (
               <Container key={index}>
                 <Typography variant="body2" align="left">
-                  {index}
+                  Item {index}
                 </Typography>
                 <TextField
                   label="Product Name"
