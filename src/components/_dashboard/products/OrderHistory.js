@@ -226,7 +226,9 @@ export default function OrderHistory() {
                             <Link to={`/order-details/${row.uid}`}>View Products</Link>
                           </IconButton>
                         ) : (
-                          'False'
+                          <IconButton size="small">
+                            <Link to={`/order-details/${row.uid}`}>View Vendors</Link>
+                          </IconButton>
                         )}
                       </TableCell>
                     </TableRow>
