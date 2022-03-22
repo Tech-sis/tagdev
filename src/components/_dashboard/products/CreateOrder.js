@@ -13,7 +13,8 @@ import {
   Alert,
   AlertTitle,
   Container,
-  Typography
+  Typography,
+  Stack
 } from '@mui/material';
 // material icons
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -63,7 +64,9 @@ const CreateOrder = () => {
       addDoc(orderRef, {
         uid: user.uid,
         createdAt: new Date().toDateString(),
-        order: inputFields
+        orders: inputFields,
+        status: 'pending',
+        verified: true
       });
       console.log('order added');
       console.log(inputFields);
@@ -91,7 +94,7 @@ const CreateOrder = () => {
       )}
 
       <Card>
-        <CardHeader title="Product Request Form" />
+        <CardHeader title="Product Request Form" align="center" />
         <CardContent
           sx={{
             display: 'block',
@@ -105,77 +108,79 @@ const CreateOrder = () => {
           <form onSubmit={handleSubmit}>
             {inputFields.map((inputField, index) => (
               <Container key={index}>
-                <Typography variant="body2" align="left">
-                  Item {index}
+                <Typography variant="body2" align="left" color="primary">
+                  Item {index + 1}
                 </Typography>
-                <TextField
-                  label="Product Name"
-                  name="productName"
-                  value={inputField.productName}
-                  onChange={(event) => handleChangeInput(event, index)}
-                  variant="outlined"
-                  required
-                  type="text"
-                  margin="normal"
-                  sx={{
-                    width: '65%',
-                    mr: 5
-                  }}
-                />
-                <TextField
-                  label="Quantity"
-                  name="quantity"
-                  value={inputField.quantity}
-                  //   onChange={(e) => setQuantity(e.target.value)}
-                  onChange={(event) => handleChangeInput(event, index)}
-                  variant="outlined"
-                  required
-                  type="number"
-                  margin="normal"
-                  sx={{
-                    width: '25%'
-                  }}
-                />
-                <TextField
-                  label="Description"
-                  name="description"
-                  value={inputField.description}
-                  onChange={(event) => handleChangeInput(event, index)}
-                  variant="outlined"
-                  type="text"
-                  margin="normal"
-                  sx={{
-                    mr: 3,
-                    mb: 3,
-                    width: '65%'
-                  }}
-                  multiline
-                  rows={2}
-                />
-                <IconButton
-                  aria-label="delete"
-                  variant="outlined"
-                  color="primary"
-                  onClick={handleDeleteInput}
-                  sx={{
-                    mt: 5,
-                    ml: 10
-                  }}
+                <Stack direction={{ xs: 'column', sm: 'row' }} spacing={3} sx={{ mt: '10px' }}>
+                  <TextField
+                    label="Product Name"
+                    name="productName"
+                    value={inputField.productName}
+                    onChange={(event) => handleChangeInput(event, index)}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    type="text"
+                  />
+                  <TextField
+                    label="Quantity"
+                    name="quantity"
+                    value={inputField.quantity}
+                    onChange={(event) => handleChangeInput(event, index)}
+                    variant="outlined"
+                    required
+                    fullWidth
+                    type="number"
+                  />
+                </Stack>
+
+                <Stack
+                  spacing={4}
+                  direction={{ xs: 'row', sm: 'row' }}
+                  sx={{ mt: '20px', mb: '20px' }}
                 >
-                  <DeleteIcon />
-                </IconButton>
-                <IconButton
-                  aria-label="add"
-                  variant="outlined"
-                  color="primary"
-                  onClick={handleAddInput}
-                  sx={{
-                    mt: 5,
-                    ml: 3
-                  }}
-                >
-                  <AddIcon />
-                </IconButton>
+                  <TextField
+                    label="Description"
+                    name="description"
+                    value={inputField.description}
+                    onChange={(event) => handleChangeInput(event, index)}
+                    variant="outlined"
+                    type="text"
+                    fullWidth
+                    // margin="normal"
+                    // sx={{
+                    //   mr: 3,
+                    //   mb: 3,
+                    //   width: '65%'
+                    // }}
+                    multiline
+                    rows={3}
+                  />
+                  <IconButton
+                    aria-label="delete"
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleDeleteInput}
+                    sx={{
+                      mt: 5,
+                      ml: 10
+                    }}
+                  >
+                    <DeleteIcon />
+                  </IconButton>
+                  <IconButton
+                    aria-label="add"
+                    variant="outlined"
+                    color="primary"
+                    onClick={handleAddInput}
+                    sx={{
+                      mt: 5,
+                      ml: 3
+                    }}
+                  >
+                    <AddIcon />
+                  </IconButton>
+                </Stack>
               </Container>
             ))}
             <CardActions sx={{ justifyContent: 'space-between', mb: '30px', mx: '20px' }}>

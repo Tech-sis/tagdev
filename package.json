@@ -51,6 +51,7 @@
     "@mui/material": "^5.5.1",
     "@mui/utils": "^5.0.0",
     "@mui/x-data-grid": "^5.6.1",
+    "@mui/x-data-grid-pro": "^5.6.1",
     "@testing-library/jest-dom": "^5.14.1",
     "apexcharts": "^3.28.3",
     "change-case": "^4.1.2",
