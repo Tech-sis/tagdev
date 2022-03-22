@@ -66,7 +66,8 @@ const CreateOrder = () => {
         createdAt: new Date().toDateString(),
         orders: inputFields,
         status: 'pending',
-        verified: true
+        verified: true,
+        action: true
       });
       console.log('order added');
       console.log(inputFields);

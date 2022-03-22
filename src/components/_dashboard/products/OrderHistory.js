@@ -223,7 +223,7 @@ export default function OrderHistory() {
                       <TableCell>
                         {row.action === true ? (
                           <IconButton size="small">
-                            <Link to={`/order-details/${row.uid}`}>View Details</Link>
+                            <Link to={`/order-details/${row.uid}`}>View Products</Link>
                           </IconButton>
                         ) : (
                           'False'
