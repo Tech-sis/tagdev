@@ -13,123 +13,187 @@ import {
   TableHead,
   TableRow,
   Typography,
-  FormControlLabel,
-  Switch,
-  Link,
-  Paper
+  Paper,
+  Button,
+  Link
 } from '@mui/material';
 import PropTypes from 'prop-types';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
 import { getDocs, collection } from 'firebase/firestore';
 import { auth, db } from '../../../firebase';
 
-// function Row(props) {
-//   const { row } = props;
-//   const [open, setOpen] = useState(false);
-//   return (
-//     <>
-//       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
-//         <TableCell>
-//           <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
-//             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-//           </IconButton>
-//         </TableCell>
-//         <TableCell component="th" scope="row">
-//           {row.id}
-//         </TableCell>
-//         <TableCell align="right">{row.createdAt}</TableCell>
-//         <TableCell align="right">{row.status}</TableCell>
-//         <TableCell align="right">{row.verified}</TableCell>
-//         <TableCell align="right">{row.protein}</TableCell>
-//       </TableRow>
-//       <TableRow>
-//         <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
-//           <Collapse in={open} timeout="auto" unmountOnExit>
-//             <Box sx={{ margin: 1 }}>
-//               <Typography variant="h6" gutterBottom component="div">
-//                 PRODUCT LIST
-//               </Typography>
-//               <Table size="small" aria-label="purchases">
-//                 <TableHead>
-//                   <TableRow>
-//                     <TableCell>PRODUCT NAME</TableCell>
-//                     <TableCell>PRICE</TableCell>
-//                     <TableCell align="right">QUANTITY</TableCell>
-//                     <TableCell align="right">DESCRIPTION</TableCell>
-//                     <TableCell align="right">ACTION</TableCell>
-//                   </TableRow>
-//                 </TableHead>
-//                 <TableBody>
-//                   {row.productList.map((productListRow) => (
-//                     <TableRow key={productListRow.productName}>
-//                       <TableCell component="th" scope="row">
-//                         {productListRow.price}
-//                       </TableCell>
-//                       <TableCell>{productListRow.quantity}</TableCell>
-//                       <TableCell align="right">{productListRow.description}</TableCell>
-//                       <TableCell align="right">{productListRow.action}</TableCell>
-//                     </TableRow>
-//                   ))}
-//                 </TableBody>
-//               </Table>
-//             </Box>
-//           </Collapse>
-//         </TableCell>
-//       </TableRow>
-//     </>
-//   );
-// }
+function Row(props) {
+  const { row } = props;
+  const [open, setOpen] = useState(false);
 
-// Row.propTypes = {
-//   row: PropTypes.shape({
-//     id: PropTypes.number.isRequired,
-//     createdAt: PropTypes.number.isRequired,
-//     status: PropTypes.number.isRequired,
-//     productList: PropTypes.arrayOf(
-//       PropTypes.shape({
-//         productName: PropTypes.number.isRequired,
-//         price: PropTypes.string.isRequired,
-//         quantity: PropTypes.string.isRequired,
-//         description: PropTypes.string.isRequired,
-//         action: PropTypes.string.isRequired
-//       })
-//     ).isRequired,
-//     verified: PropTypes.string.isRequired,
-//     action: PropTypes.number.isRequired,
-//     protein: PropTypes.number.isRequired
-//   }).isRequired
-// };
+  return (
+    <>
+      <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
+        <TableCell>
+          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+          </IconButton>
+        </TableCell>
+        <TableCell component="th" scope="row">
+          {row.id}
+        </TableCell>
+        <TableCell>{row.createdAt}</TableCell>
+        <TableCell>{row.status}</TableCell>
+        <TableCell>
+          {row.verified === true ? (
+            <Button variant="contained" color="primary" size="small">
+              Verified
+            </Button>
+          ) : (
+            <Button variant="contained" color="secondary">
+              Not Verified
+            </Button>
+          )}
+        </TableCell>
+        <TableCell>
+          {row.action === true ? (
+            <Link href={`/dashboard/orders/${row.id}`}>
+              <Button variant="outlined" color="primary" size="small">
+                View Products
+              </Button>
+            </Link>
+          ) : (
+            <Link href={`/dashboard/orders/${row.id}`}>
+              <Button variant="outlined" color="primary" size="small">
+                View Products
+              </Button>
+            </Link>
+          )}
+        </TableCell>
+        <TableCell>
+          {row.vendor === true ? (
+            <Button variant="outlined" color="primary" size="small">
+              Vendor
+            </Button>
+          ) : (
+            <Button variant="outlined" color="primary" size="small">
+              View Vendor Prices
+            </Button>
+          )}
+        </TableCell>
+      </TableRow>
+      <TableRow>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+          <Collapse in={open} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="subtitle1" gutterBottom component="div">
+                PRODUCT LIST
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Product Name</TableCell>
+                    <TableCell>Price</TableCell>
+                    <TableCell>Quantity</TableCell>
+                    <TableCell>Description</TableCell>
+                    <TableCell>Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {row.orders.map((order, index) => (
+                    <TableRow key={index}>
+                      <TableCell component="th" scope="row">
+                        {order.productName}
+                      </TableCell>
+                      <TableCell>
+                        {order.price === undefined ? (
+                          <Typography variant="body2" color="textSecondary" component="p">
+                            Pending
+                          </Typography>
+                        ) : (
+                          <Typography variant="body2" color="textSecondary" component="p">
+                            {order.price}
+                          </Typography>
+                        )}
+                      </TableCell>
+                      <TableCell>{order.quantity}</TableCell>
+                      <TableCell>{order.description}</TableCell>
+                      <TableCell>
+                        {order.action === true ? (
+                          <Button variant="outlined" color="primary" size="small">
+                            No action
+                          </Button>
+                        ) : (
+                          <>
+                            <IconButton aria-label="delete">
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton aria-label="delete">
+                              <DeleteIcon />
+                            </IconButton>
+                          </>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
+        </TableCell>
+      </TableRow>
+    </>
+  );
+}
+
+Row.propTypes = {
+  row: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    uid: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+    verified: PropTypes.bool.isRequired,
+    action: PropTypes.bool,
+    vendor: PropTypes.bool,
+    orders: PropTypes.arrayOf(
+      PropTypes.shape({
+        productName: PropTypes.string.isRequired,
+        price: PropTypes.number,
+        quantity: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        action: PropTypes.bool
+      })
+    ).isRequired
+  }).isRequired
+};
 
 const columns = [
   {
-    label: 'ID',
-    minWidth: 170,
-    align: 'left',
-    format: (value) => value.toLocaleString()
+    label: 'Order ID',
+    minWidth: 100
+    // align: 'right'
+    // format: (value) => value.toLocaleString()
   },
   {
     label: 'Created At',
-    minWidth: 170,
-    align: 'left',
-    format: (value) => value.toLocaleString()
+    minWidth: 170
+    // align: 'right'
+    // format: (value) => value.toLocaleString()
   },
   {
     label: 'Status',
-    minWidth: 170,
-    align: 'left',
+    minWidth: 100,
+    // align: 'right',
     format: (value) => value.toLocaleString()
   },
   {
     label: 'Verified',
-    minWidth: 170,
-    align: 'left',
+    minWidth: 100,
+    // align: 'right',
     format: (value) => value.toLocaleString()
   },
   {
     label: 'Action',
-    minWidth: 170,
-    align: 'left',
+    minWidth: 150,
+    // align: 'right',
     format: (value) => value.toLocaleString()
   }
 ];
@@ -138,7 +202,6 @@ export default function OrderHistory() {
   const [tableData, setTableData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [dense, setDense] = useState(false);
 
   const handleChangePage = (e, newPage) => {
     setPage(newPage);
@@ -159,7 +222,9 @@ export default function OrderHistory() {
           JSON.parse(
             JSON.stringify(
               data.docs
-                .map((doc) => (doc.data()?.uid === currentUser?.uid ? doc.data() : null))
+                .map((doc) =>
+                  doc.data()?.uid === currentUser?.uid ? { ...doc.data(), id: doc.id } : null
+                )
                 .filter((element) => element !== null)
             )
           )
@@ -168,12 +233,10 @@ export default function OrderHistory() {
           JSON.parse(
             JSON.stringify(
               data.docs
-                .map((doc) => (doc.data()?.uid === currentUser?.uid ? doc.data() : null))
+                .map((doc) =>
+                  doc.data()?.uid === currentUser?.uid ? { ...doc.data(), id: doc.id } : null
+                )
                 .filter((element) => element !== null)
-                .map((element) => {
-                  const { uid, createdAt, status, orders, verified, action } = element;
-                  return { uid, createdAt, status, orders, verified, action };
-                })
             )
           )
         );
@@ -193,59 +256,37 @@ export default function OrderHistory() {
   return (
     <>
       <Card>
-        <Paper sx={{ width: '100%', overflow: 'hidden' }}>
-          <TableContainer>
-            <Table aria-label="collapsible table">
-              <TableHead>
-                <TableRow>
-                  {columns.map((column, index) => (
-                    <TableCell
-                      key={index}
-                      align={column.align}
-                      style={{ minWidth: column.minWidth }}
-                    >
-                      {column.label}
-                    </TableCell>
-                  ))}
-                </TableRow>
-              </TableHead>
-              <TableBody>
-                {tableData
-                  .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                  .map((row, index) => (
-                    <TableRow key={index}>
-                      <TableCell component="th" scope="row" align="right">
-                        {index + 1}
-                      </TableCell>
-                      <TableCell>{row.createdAt}</TableCell>
-                      <TableCell>{row.status}</TableCell>
-                      <TableCell>{row.verified === true ? 'True' : 'False'}</TableCell>
-                      <TableCell>
-                        {row.action === true ? (
-                          <IconButton size="small">
-                            <Link to={`/order-details/${row.uid}`}>View Products</Link>
-                          </IconButton>
-                        ) : (
-                          <IconButton size="small">
-                            <Link to={`/order-details/${row.uid}`}>View Vendors</Link>
-                          </IconButton>
-                        )}
-                      </TableCell>
-                    </TableRow>
-                  ))}
-              </TableBody>
-            </Table>
-          </TableContainer>
-          <TablePagination
-            rowsPerPageOptions={[5, 10, 25]}
-            component="div"
-            count={tableData.length}
-            rowsPerPage={rowsPerPage}
-            page={page}
-            onPageChange={handleChangePage}
-            onRowsPerPageChange={handleChangeRowsPerPage}
-          />
-        </Paper>
+        <TableContainer component={Paper}>
+          <Table aria-label="collapsible table">
+            <TableHead>
+              <TableRow>
+                <TableCell />
+                {columns.map((column, index) => (
+                  <TableCell key={index} align={column.align} style={{ minWidth: column.minWidth }}>
+                    {column.label}
+                  </TableCell>
+                ))}
+                <TableCell style={{ minWidth: '270px' }} align="left" />
+              </TableRow>
+            </TableHead>
+            <TableBody>
+              {tableData
+                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                .map((row, index) => (
+                  <Row key={index} row={row} />
+                ))}
+            </TableBody>
+          </Table>
+        </TableContainer>
+        <TablePagination
+          rowsPerPageOptions={[5, 10, 25]}
+          component="div"
+          count={tableData.length}
+          rowsPerPage={rowsPerPage}
+          page={page}
+          onPageChange={handleChangePage}
+          onRowsPerPageChange={handleChangeRowsPerPage}
+        />
       </Card>
     </>
   );
