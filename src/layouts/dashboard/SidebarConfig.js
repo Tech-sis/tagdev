@@ -70,11 +70,6 @@ export const customerConfig = [
     icon: getIcon(pieChart2Fill)
   },
   {
-    title: 'blog',
-    path: '/dashboard/blog',
-    icon: getIcon(fileTextFill)
-  },
-  {
     title: 'create new order',
     path: '/dashboard/new-order',
     icon: getIcon(fileTextFill)

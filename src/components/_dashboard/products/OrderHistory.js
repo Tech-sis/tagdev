@@ -1,4 +1,4 @@
-/* eslint-disable no-nested-ternary */
+/* eslint-disable no-restricted-globals */
 import React, { useState, useEffect } from 'react';
 import {
   Card,
@@ -17,23 +17,30 @@ import {
   Button,
   Link
 } from '@mui/material';
+import { sentenceCase } from 'change-case';
+
 import PropTypes from 'prop-types';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
 import { getDocs, collection } from 'firebase/firestore';
+import Label from '../../Label';
 import { auth, db } from '../../../firebase';
 
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = useState(false);
 
+  const handleClick = () => {
+    setOpen(!open);
+  };
+
   return (
     <>
       <TableRow sx={{ '& > *': { borderBottom: 'unset' } }}>
         <TableCell>
-          <IconButton aria-label="expand row" size="small" onClick={() => setOpen(!open)}>
+          <IconButton aria-label="expand row" size="small" onClick={handleClick}>
             {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </TableCell>
@@ -41,31 +48,31 @@ function Row(props) {
           {row.id}
         </TableCell>
         <TableCell>{row.createdAt}</TableCell>
-        <TableCell>{row.status}</TableCell>
+        <TableCell>
+          <Label variant="ghost" color={(status === 'banned' && 'error') || 'success'}>
+            {sentenceCase(row.status)}
+          </Label>
+        </TableCell>
         <TableCell>
           {row.verified === true ? (
-            <Button variant="contained" color="primary" size="small">
-              Verified
-            </Button>
+            <Typography variant="body2" color="textSecondary">
+              Yes
+            </Typography>
           ) : (
-            <Button variant="contained" color="secondary">
-              Not Verified
-            </Button>
+            <Typography variant="body2" color="textSecondary">
+              No
+            </Typography>
           )}
         </TableCell>
         <TableCell>
           {row.action === true ? (
-            <Link href={`/dashboard/orders/${row.id}`}>
-              <Button variant="outlined" color="primary" size="small">
-                View Products
-              </Button>
-            </Link>
+            <Button variant="outlined" color="primary" size="small" onClick={handleClick}>
+              View Products
+            </Button>
           ) : (
-            <Link href={`/dashboard/orders/${row.id}`}>
-              <Button variant="outlined" color="primary" size="small">
-                View Products
-              </Button>
-            </Link>
+            <Button variant="outlined" color="primary" size="small" onClick={handleClick}>
+              View Products
+            </Button>
           )}
         </TableCell>
         <TableCell>
@@ -75,7 +82,7 @@ function Row(props) {
             </Button>
           ) : (
             <Button variant="outlined" color="primary" size="small">
-              View Vendor Prices
+              View Vendors Prices
             </Button>
           )}
         </TableCell>
@@ -169,7 +176,6 @@ const columns = [
   {
     label: 'Order ID',
     minWidth: 100
-    // align: 'right'
     // format: (value) => value.toLocaleString()
   },
   {
