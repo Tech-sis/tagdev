@@ -31,9 +31,14 @@ import { auth, db } from '../../../firebase';
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = useState(false);
+  const [openVendor, setOpenVendor] = useState(false);
 
   const handleClick = () => {
     setOpen(!open);
+  };
+
+  const handleClickVendor = () => {
+    setOpenVendor(!openVendor);
   };
 
   return (
@@ -81,7 +86,7 @@ function Row(props) {
               Vendor
             </Button>
           ) : (
-            <Button variant="outlined" color="primary" size="small">
+            <Button variant="outlined" color="primary" size="small" onClick={handleClickVendor}>
               View Vendors Prices
             </Button>
           )}
@@ -145,6 +150,62 @@ function Row(props) {
               </Table>
             </Box>
           </Collapse>
+          <Collapse in={openVendor} timeout="auto" unmountOnExit>
+            <Box sx={{ margin: 1 }}>
+              <Typography variant="subtitle1" gutterBottom component="div">
+                VENDOR LIST
+              </Typography>
+              <Table size="small" aria-label="purchases">
+                <TableHead>
+                  <TableRow>
+                    <TableCell>Vendor Name</TableCell>
+                    <TableCell>Price</TableCell>
+                    <TableCell>Quantity</TableCell>
+                    <TableCell>Description</TableCell>
+                    <TableCell>Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {row.vendors?.map((vendorPrice, index) => (
+                    <TableRow key={index}>
+                      <TableCell component="th" scope="row">
+                        {vendorPrice.vendorName}
+                      </TableCell>
+                      <TableCell>
+                        {vendorPrice.price === undefined ? (
+                          <Typography variant="body2" color="textSecondary" component="p">
+                            Pending
+                          </Typography>
+                        ) : (
+                          <Typography variant="body2" color="textSecondary" component="p">
+                            {vendorPrice.price}
+                          </Typography>
+                        )}
+                      </TableCell>
+                      <TableCell>{vendorPrice.quantity}</TableCell>
+                      <TableCell>{vendorPrice.description}</TableCell>
+                      <TableCell>
+                        {vendorPrice.action === true ? (
+                          <Button variant="outlined" color="primary" size="small">
+                            No action
+                          </Button>
+                        ) : (
+                          <>
+                            <IconButton aria-label="delete">
+                              <EditIcon />
+                            </IconButton>
+                            <IconButton aria-label="delete">
+                              <DeleteIcon />
+                            </IconButton>
+                          </>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </Box>
+          </Collapse>
         </TableCell>
       </TableRow>
     </>
@@ -168,7 +229,14 @@ Row.propTypes = {
         description: PropTypes.string.isRequired,
         action: PropTypes.bool
       })
-    ).isRequired
+    ).isRequired,
+    vendors: PropTypes.arrayOf(
+      PropTypes.shape({
+        vendorName: PropTypes.string.isRequired,
+        price: PropTypes.number,
+        action: PropTypes.bool
+      })
+    )
   }).isRequired
 };
 
@@ -251,6 +319,7 @@ export default function OrderHistory() {
           tableData
         };
         console.log(userData.tableData.map((element) => element.orders));
+        console.log(userData.tableData.map((element) => element.vendors));
       };
       getData();
     });
