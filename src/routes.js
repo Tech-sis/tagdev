@@ -13,6 +13,7 @@ import Blog from './pages/Blog';
 import User from './pages/User';
 import NotFound from './pages/Page404';
 import COrderHistory from './pages/COrderHistory';
+import VendorReview from './pages/VendorReview';
 import { ProtectedRoute } from './ProtectedRoutes';
 
 // ----------------------------------------------------------------------
@@ -34,6 +35,7 @@ export default function Router() {
         { path: 'new-order', element: <Products /> },
         { path: 'blog', element: <Blog /> },
         { path: 'orders', element: <COrderHistory /> },
+        { path: 'order-review', element: <VendorReview /> }
       ]
     },
     {

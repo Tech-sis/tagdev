@@ -5,4 +5,4 @@ export { default as ProductCard } from './ProductCard';
 // export { default as ProductSort } from './ProductSort';
 export { default as CreateOrder } from './CreateOrder';
 export { default as OrderHistory } from './OrderHistory';
-export { default as Order } from './Order';
+export { default as OrderReview } from './OrderReview';

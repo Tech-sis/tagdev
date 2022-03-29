@@ -106,6 +106,18 @@ const CreateOrder = () => {
             position: 'relative'
           }}
         >
+          <Button
+            variant="outlined"
+            aria-label="add"
+            color="primary"
+            onClick={handleAddInput}
+            sx={{
+              display: 'flex',
+              marginLeft: 'auto'
+            }}
+          >
+            Add Product
+          </Button>
           <form onSubmit={handleSubmit}>
             {inputFields.map((inputField, index) => (
               <Container key={index}>
@@ -148,12 +160,6 @@ const CreateOrder = () => {
                     variant="outlined"
                     type="text"
                     fullWidth
-                    // margin="normal"
-                    // sx={{
-                    //   mr: 3,
-                    //   mb: 3,
-                    //   width: '65%'
-                    // }}
                     multiline
                     rows={3}
                   />

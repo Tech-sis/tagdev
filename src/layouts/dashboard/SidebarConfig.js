@@ -89,7 +89,7 @@ export const vendorConfig = [
   },
   {
     title: 'Vendor Order review',
-    path: '/dashboard/blog',
+    path: '/dashboard/order-review',
     icon: getIcon(fileTextFill)
   },
   {

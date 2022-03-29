@@ -2,6 +2,8 @@
 import React, { useState, useEffect } from 'react';
 import {
   Card,
+  CardContent,
+  CardHeader,
   Box,
   Collapse,
   IconButton,
@@ -14,8 +16,7 @@ import {
   TableRow,
   Typography,
   Paper,
-  Button,
-  Link
+  Button
 } from '@mui/material';
 import { sentenceCase } from 'change-case';
 
@@ -32,13 +33,15 @@ function Row(props) {
   const { row } = props;
   const [open, setOpen] = useState(false);
   const [openVendor, setOpenVendor] = useState(false);
+  const [visible, setVisible] = useState(false);
 
   const handleClick = () => {
     setOpen(!open);
   };
 
   const handleClickVendor = () => {
-    setOpenVendor(!openVendor);
+    // setOpenVendor(!openVendor);
+    setVisible(!visible);
   };
 
   return (
@@ -93,7 +96,7 @@ function Row(props) {
         </TableCell>
       </TableRow>
       <TableRow>
-        <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
+        <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingLeft: 80 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="subtitle1" gutterBottom component="div">
@@ -276,6 +279,7 @@ export default function OrderHistory() {
   const [tableData, setTableData] = useState([]);
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [visible, setVisible] = useState(true);
 
   const handleChangePage = (e, newPage) => {
     setPage(newPage);
@@ -284,6 +288,10 @@ export default function OrderHistory() {
   const handleChangeRowsPerPage = (e) => {
     setRowsPerPage(parseInt(e.target.value, 5));
     setPage(0);
+  };
+
+  const handleClickVendor = (e) => {
+    setVisible(!visible);
   };
 
   useEffect(() => {
@@ -331,37 +339,58 @@ export default function OrderHistory() {
   return (
     <>
       <Card>
-        <TableContainer component={Paper}>
-          <Table aria-label="collapsible table">
-            <TableHead>
-              <TableRow>
-                <TableCell />
-                {columns.map((column, index) => (
-                  <TableCell key={index} align={column.align} style={{ minWidth: column.minWidth }}>
-                    {column.label}
-                  </TableCell>
-                ))}
-                <TableCell style={{ minWidth: '270px' }} align="left" />
-              </TableRow>
-            </TableHead>
-            <TableBody>
-              {tableData
-                .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-                .map((row, index) => (
-                  <Row key={index} row={row} />
-                ))}
-            </TableBody>
-          </Table>
-        </TableContainer>
-        <TablePagination
-          rowsPerPageOptions={[5, 10, 25]}
-          component="div"
-          count={tableData.length}
-          rowsPerPage={rowsPerPage}
-          page={page}
-          onPageChange={handleChangePage}
-          onRowsPerPageChange={handleChangeRowsPerPage}
-        />
+        <CardHeader title="Order History" subheader="The latest orders placed by you" />
+        <CardContent>
+          <Button variant="outlined" color="primary" onClick={handleClickVendor}>
+            View vendor Prices
+          </Button>
+        </CardContent>
+
+        {visible === true ? (
+          <>
+            <TableContainer component={Paper}>
+              <Table aria-label="collapsible table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell />
+                    {columns.map((column, index) => (
+                      <TableCell
+                        key={index}
+                        align={column.align}
+                        style={{ minWidth: column.minWidth }}
+                      >
+                        {column.label}
+                      </TableCell>
+                    ))}
+                    <TableCell style={{ minWidth: '270px' }} align="left" />
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {tableData
+                    .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
+                    .map((row, index) => (
+                      <>
+                        <Row key={index} row={row} />
+                      </>
+                    ))}
+                </TableBody>
+              </Table>
+            </TableContainer>
+            <TablePagination
+              rowsPerPageOptions={[5, 10, 25]}
+              component="div"
+              count={tableData.length}
+              rowsPerPage={rowsPerPage}
+              page={page}
+              onPageChange={handleChangePage}
+              onRowsPerPageChange={handleChangeRowsPerPage}
+            />
+          </>
+        ) : (
+          <div>
+            <h1>Loading...</h1>
+          </div>
+        )}
       </Card>
     </>
   );
