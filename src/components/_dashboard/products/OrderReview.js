@@ -38,50 +38,18 @@ function Row(props) {
   const [openVendor, setOpenVendor] = useState(false);
   const [status, setStatus] = useState(undefined);
   const [editing, setEditing] = useState(true);
+  // const [price, setPrice] = useState([]);
   const [inputPrices, setInputPrices] = useState([
     {
-      product: row.orders,
-      price: row.price.push
+      productName: row.orders.map((order) => order.productName).join(', '),
+      quantity: row.orders.map((order) => order.quantity).join(', '),
+      description: row.orders.map((order) => order.description).join(', '),
+      price: ''
     }
   ]);
 
-  console.log(inputPrices);
-
   const handleClick = () => {
     setOpen(!open);
-  };
-
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setInputPrices((prevState) =>
-      prevState.map((inputPrice) => {
-        if (name === 'productName') {
-          return {
-            ...inputPrice,
-            productName: value
-          };
-        }
-        if (name === 'description') {
-          return {
-            ...inputPrice,
-            description: value
-          };
-        }
-        if (name === 'quantity') {
-          return {
-            ...inputPrice,
-            quantity: value
-          };
-        }
-        if (name === 'price') {
-          return {
-            ...inputPrice,
-            price: value
-          };
-        }
-        return inputPrice;
-      })
-    );
   };
 
   const { currentUser } = auth;
@@ -94,7 +62,8 @@ function Row(props) {
         vendorid: currentUser.uid,
         verified: false,
         accepted: false,
-        id: row.id
+        id: row.id,
+        createdAt: new Date().toDateString()
       });
       setInputPrices({
         productName: '',
@@ -102,6 +71,16 @@ function Row(props) {
         quantity: '',
         price: ''
       });
+      setEditing(false);
+      setStatus('success');
+      setInputPrices([
+        {
+          productName: '',
+          description: '',
+          quantity: '',
+          price: ''
+        }
+      ]);
       console.log('product added');
       console.log(inputPrices);
       setStatus({ type: 'success', message: 'Prices added successfully' });
@@ -110,14 +89,6 @@ function Row(props) {
       setStatus({ type: 'error', message: error.message });
     }
   };
-
-  // const startEditing = (index) => {
-  //   setEditing((prevState) => {
-  //     const newState = [...prevState];
-  //     newState[index] = true;
-  //     return newState;
-  //   });
-  // };
 
   return (
     <>
@@ -183,50 +154,32 @@ function Row(props) {
                           {order.productName}
                         </TableCell>
                         <TableCell>
-                          {editing ? (
-                            <TextField
-                              name="price"
-                              value={inputPrices[index]?.price}
-                              onChange={(e) => handleChange(e, index)}
-                            />
-                          ) : (
-                            order.price
-                          )}
+                          <TextField
+                            label="Price"
+                            variant="outlined"
+                            size="small"
+                            name="price"
+                            value={inputPrices[index]?.price}
+                            onChange={(e) => {
+                              setInputPrices(
+                                inputPrices.map((item, i) => {
+                                  if (i === index) {
+                                    return {
+                                      ...item,
+                                      price: e.target.value
+                                    };
+                                  }
+                                  return item;
+                                })
+                              );
+                            }}
+                            required
+                            type="number"
+                          />
+                          {console.log(inputPrices)}
                         </TableCell>
-
-                        {/* {inputPrices.map((inputPrice, index) => (
-                            <>
-                              <TextField
-                                label="Price"
-                                variant="outlined"
-                                size="small"
-                                name="price"
-                                value={inputPrice.price}
-                                onChange={(e) => handleChange(e, index)}
-                                required
-                                type="number"
-                              />
-                            </>
-                          ))} */}
-
                         <TableCell>{order.quantity}</TableCell>
                         <TableCell>{order.description}</TableCell>
-                        <TableCell>
-                          {order.action === true ? (
-                            <Button variant="outlined" color="primary" size="small">
-                              No action
-                            </Button>
-                          ) : (
-                            <>
-                              <IconButton
-                                aria-label="delete"
-                                // onClick={() => startEditing(index)}
-                              >
-                                <EditIcon />
-                              </IconButton>
-                            </>
-                          )}
-                        </TableCell>
                       </TableRow>
                     </>
                   ))}
