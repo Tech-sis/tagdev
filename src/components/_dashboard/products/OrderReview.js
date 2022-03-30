@@ -1,5 +1,5 @@
 /* eslint-disable no-restricted-globals */
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 // firebase
 import { collection, addDoc, getDocs, doc, setDoc } from 'firebase/firestore';
 import {
@@ -35,18 +35,8 @@ import { auth, db } from '../../../firebase';
 function Row(props) {
   const { row } = props;
   const [open, setOpen] = useState(false);
-  const [openVendor, setOpenVendor] = useState(false);
   const [status, setStatus] = useState(undefined);
-  const [editing, setEditing] = useState(true);
-  // const [price, setPrice] = useState([]);
-  const [inputPrices, setInputPrices] = useState([
-    {
-      productName: row.orders.map((order) => order.productName).join(', '),
-      quantity: row.orders.map((order) => order.quantity).join(', '),
-      description: row.orders.map((order) => order.description).join(', '),
-      price: ''
-    }
-  ]);
+  const [prices, setPrices] = useState([]);
 
   const handleClick = () => {
     setOpen(!open);
@@ -56,33 +46,28 @@ function Row(props) {
   const docRef = collection(db, 'orderDetails', `${row.id}`, 'vendors');
   const handleSubmit = (e) => {
     e.preventDefault();
+    const arr = [];
+    row.orders.forEach((order, index) => {
+      arr.push({
+        productName: order.productName,
+        description: order.description,
+        quantity: order.quantity,
+        price: prices[index]
+      });
+    });
+    console.log(arr);
     try {
       addDoc(docRef, {
-        products: inputPrices,
+        products: arr,
         vendorid: currentUser.uid,
         verified: false,
         accepted: false,
         id: row.id,
         createdAt: new Date().toDateString()
       });
-      setInputPrices({
-        productName: '',
-        description: '',
-        quantity: '',
-        price: ''
-      });
-      setEditing(false);
-      setStatus('success');
-      setInputPrices([
-        {
-          productName: '',
-          description: '',
-          quantity: '',
-          price: ''
-        }
-      ]);
       console.log('product added');
-      console.log(inputPrices);
+      console.log(arr);
+      setPrices([]);
       setStatus({ type: 'success', message: 'Prices added successfully' });
     } catch (error) {
       console.log(error);
@@ -134,6 +119,12 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingLeft: 80 }} colSpan={6}>
           <Collapse in={open} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
+              {status && (
+                <Alert severity={status.type}>
+                  <AlertTitle>{status.type}</AlertTitle>
+                  {status.message}
+                </Alert>
+              )}
               <Typography variant="subtitle1" gutterBottom component="div">
                 PRODUCT LIST
               </Typography>
@@ -159,24 +150,15 @@ function Row(props) {
                             variant="outlined"
                             size="small"
                             name="price"
-                            value={inputPrices[index]?.price}
+                            value={prices[index]}
                             onChange={(e) => {
-                              setInputPrices(
-                                inputPrices.map((item, i) => {
-                                  if (i === index) {
-                                    return {
-                                      ...item,
-                                      price: e.target.value
-                                    };
-                                  }
-                                  return item;
-                                })
-                              );
+                              const arr = [...prices];
+                              arr[index] = e.target.value;
+                              setPrices(arr);
                             }}
                             required
                             type="number"
                           />
-                          {console.log(inputPrices)}
                         </TableCell>
                         <TableCell>{order.quantity}</TableCell>
                         <TableCell>{order.description}</TableCell>
@@ -231,6 +213,32 @@ Row.propTypes = {
         description: PropTypes.string.isRequired
       })
     )
+  }).isRequired,
+  mRow: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    uid: PropTypes.string.isRequired,
+    createdAt: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+    verified: PropTypes.bool.isRequired,
+    action: PropTypes.bool,
+    vendor: PropTypes.bool,
+    orders: PropTypes.arrayOf(
+      PropTypes.shape({
+        productName: PropTypes.string.isRequired,
+        price: PropTypes.number,
+        quantity: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired,
+        action: PropTypes.bool
+      })
+    ).isRequired,
+    products: PropTypes.arrayOf(
+      PropTypes.shape({
+        productName: PropTypes.string.isRequired,
+        price: PropTypes.number.isRequired,
+        quantity: PropTypes.string.isRequired,
+        description: PropTypes.string.isRequired
+      })
+    )
   }).isRequired
 };
 
@@ -238,30 +246,24 @@ const columns = [
   {
     label: 'Order ID',
     minWidth: 100
-    // format: (value) => value.toLocaleString()
   },
   {
     label: 'Created At',
     minWidth: 170
-    // align: 'right'
-    // format: (value) => value.toLocaleString()
   },
   {
     label: 'Status',
     minWidth: 100,
-    // align: 'right',
     format: (value) => value.toLocaleString()
   },
   {
     label: 'Verified',
     minWidth: 100,
-    // align: 'right',
     format: (value) => value.toLocaleString()
   },
   {
     label: 'Action',
     minWidth: 150,
-    // align: 'right',
     format: (value) => value.toLocaleString()
   }
 ];
@@ -320,12 +322,6 @@ export default function OrderReview() {
 
   return (
     <>
-      {status && (
-        <Alert severity={status.type}>
-          <AlertTitle>{status.type}</AlertTitle>
-          {status.message}
-        </Alert>
-      )}
       <Card>
         <TableContainer component={Paper}>
           <Table aria-label="collapsible table">
