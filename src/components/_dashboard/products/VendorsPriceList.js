@@ -20,7 +20,15 @@ import {
 import PropTypes from 'prop-types';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { getDocs, query, collectionGroup, where } from 'firebase/firestore';
+import {
+  getDocs,
+  query,
+  collectionGroup,
+  where,
+  updateDoc,
+  collection,
+  doc
+} from 'firebase/firestore';
 import { auth, db } from '../../../firebase';
 
 function Row(props) {
@@ -30,6 +38,11 @@ function Row(props) {
 
   const handleClickVendor = () => {
     setOpenVendor(!openVendor);
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    console.log('Price list accepted');
   };
 
   return (
@@ -60,8 +73,8 @@ function Row(props) {
         <TableCell style={{ paddingBottom: 0, paddingTop: 0, paddingLeft: 80 }} colSpan={6}>
           <Collapse in={openVendor} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
-              <Typography variant="subtitle1" gutterBottom component="div">
-                VENDOR LIST
+              <Typography variant="subtitle2" gutterBottom component="div">
+                Order Details
               </Typography>
               <Table size="small" aria-label="purchases">
                 <TableHead>
@@ -83,6 +96,18 @@ function Row(props) {
                       <TableCell>{product.description}</TableCell>
                     </TableRow>
                   ))}
+                  <TableRow>
+                    <TableCell colSpan={3}>
+                      <Button
+                        variant="outlined"
+                        color="primary"
+                        size="small"
+                        onClick={handleSubmit}
+                      >
+                        Accept Price
+                      </Button>
+                    </TableCell>
+                  </TableRow>
                 </TableBody>
               </Table>
             </Box>
@@ -99,6 +124,8 @@ Row.propTypes = {
     uid: PropTypes.string.isRequired,
     createdAt: PropTypes.string.isRequired,
     verified: PropTypes.bool.isRequired,
+    vendor: PropTypes.string.isRequired,
+    vendorId: PropTypes.string.isRequired,
     products: PropTypes.arrayOf(
       PropTypes.shape({
         productName: PropTypes.string.isRequired,
@@ -115,7 +142,6 @@ const columns = [
     id: '1',
     label: 'Vendor ID',
     minWidth: 100
-    // format: (value) => value.toLocaleString()
   },
   {
     id: '2',
@@ -126,7 +152,6 @@ const columns = [
     id: '3',
     label: 'Verified',
     minWidth: 100,
-    // align: 'right',
     format: (value) => value.toLocaleString()
   }
 ];
@@ -161,15 +186,6 @@ export default function VendorsPriceList() {
       const querySnapshot = getDocs(vendorRef);
       const getData = async () => {
         const data = await querySnapshot;
-        // console.log(
-        //   JSON.parse(
-        //     JSON.stringify(
-        //       data.docs
-        //         .map((doc) => (doc.data() ? { ...doc.data(), id: doc.id } : null))
-        //         .filter((element) => element !== null)
-        //     )
-        //   )
-        // );
         setVendorsData(
           JSON.parse(
             JSON.stringify(
