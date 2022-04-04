@@ -19,18 +19,19 @@ import {
   Button
 } from '@mui/material';
 import { sentenceCase } from 'change-case';
-
 import PropTypes from 'prop-types';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import DeleteIcon from '@mui/icons-material/Delete';
 import EditIcon from '@mui/icons-material/Edit';
-import { getDocs, collection } from 'firebase/firestore';
+import { getDocs, collection, query, where, collectionGroup } from 'firebase/firestore';
 import Label from '../../Label';
 import { auth, db } from '../../../firebase';
+import VendorsPriceList from './VendorsPriceList';
 
 function Row(props) {
   const { row } = props;
+  const { product } = props;
   const [open, setOpen] = useState(false);
   const [openVendor, setOpenVendor] = useState(false);
   const [visible, setVisible] = useState(false);
@@ -80,17 +81,6 @@ function Row(props) {
           ) : (
             <Button variant="outlined" color="primary" size="small" onClick={handleClick}>
               View Products
-            </Button>
-          )}
-        </TableCell>
-        <TableCell>
-          {row.vendor === true ? (
-            <Button variant="outlined" color="primary" size="small">
-              Vendor
-            </Button>
-          ) : (
-            <Button variant="outlined" color="primary" size="small" onClick={handleClickVendor}>
-              View Vendors Prices
             </Button>
           )}
         </TableCell>
@@ -153,7 +143,7 @@ function Row(props) {
               </Table>
             </Box>
           </Collapse>
-          <Collapse in={openVendor} timeout="auto" unmountOnExit>
+          {/* <Collapse in={openVendor} timeout="auto" unmountOnExit>
             <Box sx={{ margin: 1 }}>
               <Typography variant="subtitle1" gutterBottom component="div">
                 VENDOR LIST
@@ -161,54 +151,27 @@ function Row(props) {
               <Table size="small" aria-label="purchases">
                 <TableHead>
                   <TableRow>
-                    <TableCell>Vendor Name</TableCell>
+                    <TableCell>Product Name</TableCell>
                     <TableCell>Price</TableCell>
                     <TableCell>Quantity</TableCell>
                     <TableCell>Description</TableCell>
-                    <TableCell>Action</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {row.vendors?.map((vendorPrice, index) => (
-                    <TableRow key={index}>
+                  {product?.products.map((product) => (
+                    <TableRow key={product.id}>
                       <TableCell component="th" scope="row">
-                        {vendorPrice.vendorName}
+                        {product.productName}
                       </TableCell>
-                      <TableCell>
-                        {vendorPrice.price === undefined ? (
-                          <Typography variant="body2" color="textSecondary" component="p">
-                            Pending
-                          </Typography>
-                        ) : (
-                          <Typography variant="body2" color="textSecondary" component="p">
-                            {vendorPrice.price}
-                          </Typography>
-                        )}
-                      </TableCell>
-                      <TableCell>{vendorPrice.quantity}</TableCell>
-                      <TableCell>{vendorPrice.description}</TableCell>
-                      <TableCell>
-                        {vendorPrice.action === true ? (
-                          <Button variant="outlined" color="primary" size="small">
-                            No action
-                          </Button>
-                        ) : (
-                          <>
-                            <IconButton aria-label="delete">
-                              <EditIcon />
-                            </IconButton>
-                            <IconButton aria-label="delete">
-                              <DeleteIcon />
-                            </IconButton>
-                          </>
-                        )}
-                      </TableCell>
+                      <TableCell>{product.price}</TableCell>
+                      <TableCell>{product.quantity}</TableCell>
+                      <TableCell>{product.description}</TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table>
             </Box>
-          </Collapse>
+          </Collapse> */}
         </TableCell>
       </TableRow>
     </>
@@ -218,10 +181,10 @@ function Row(props) {
 Row.propTypes = {
   row: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    uid: PropTypes.string.isRequired,
+    uid: PropTypes.string,
     createdAt: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
-    verified: PropTypes.bool.isRequired,
+    status: PropTypes.string,
+    verified: PropTypes.bool,
     action: PropTypes.bool,
     vendor: PropTypes.bool,
     orders: PropTypes.arrayOf(
@@ -232,42 +195,38 @@ Row.propTypes = {
         description: PropTypes.string.isRequired,
         action: PropTypes.bool
       })
-    ).isRequired,
-    vendors: PropTypes.arrayOf(
-      PropTypes.shape({
-        vendorName: PropTypes.string.isRequired,
-        price: PropTypes.number,
-        action: PropTypes.bool
-      })
-    )
+    ).isRequired
   }).isRequired
 };
 
 const columns = [
   {
+    id: '1',
     label: 'Order ID',
     minWidth: 100
     // format: (value) => value.toLocaleString()
   },
   {
+    id: '2',
     label: 'Created At',
     minWidth: 170
-    // align: 'right'
-    // format: (value) => value.toLocaleString()
   },
   {
+    id: '3',
     label: 'Status',
     minWidth: 100,
     // align: 'right',
     format: (value) => value.toLocaleString()
   },
   {
+    id: '4',
     label: 'Verified',
     minWidth: 100,
     // align: 'right',
     format: (value) => value.toLocaleString()
   },
   {
+    id: '5',
     label: 'Action',
     minWidth: 150,
     // align: 'right',
@@ -280,6 +239,8 @@ export default function OrderHistory() {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [visible, setVisible] = useState(true);
+  const [vendorsData, setVendorsData] = useState([]);
+  const [products, setProducts] = useState([]);
 
   const handleChangePage = (e, newPage) => {
     setPage(newPage);
@@ -322,12 +283,52 @@ export default function OrderHistory() {
             )
           )
         );
-        console.log(tableData);
-        const userData = {
-          tableData
-        };
-        console.log(userData.tableData.map((element) => element.orders));
-        console.log(userData.tableData.map((element) => element.vendors));
+      };
+      getData();
+    });
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged(() => {
+      const { currentUser } = auth;
+      const vendorRef = query(
+        collectionGroup(db, 'vendors'),
+        where('customerId', '==', currentUser?.uid)
+      );
+      const querySnapshot = getDocs(vendorRef);
+      const getData = async () => {
+        const data = await querySnapshot;
+        // console.log(
+        //   JSON.parse(
+        //     JSON.stringify(
+        //       data.docs
+        //         .map((doc) => (doc.data() ? { ...doc.data(), id: doc.id } : null))
+        //         .filter((element) => element !== null)
+        //     )
+        //   )
+        // );
+        setVendorsData(
+          JSON.parse(
+            JSON.stringify(
+              data.docs
+                .map((doc) => (doc.data() ? { ...doc.data(), id: doc.id } : null))
+                .filter((element) => element !== null)
+            )
+          )
+        );
+        console.log(vendorsData);
+        setProducts(
+          vendorsData.map((vendor) =>
+            vendor.products.map((product) => ({
+              ...product,
+              vendor: vendor.vendorName
+            }))
+          )
+        );
+        console.log(products);
       };
       getData();
     });
@@ -342,7 +343,7 @@ export default function OrderHistory() {
         <CardHeader title="Order History" subheader="The latest orders placed by you" />
         <CardContent>
           <Button variant="outlined" color="primary" onClick={handleClickVendor}>
-            View vendor Prices
+            {visible ? 'View Vendor Prices' : 'Back'}
           </Button>
         </CardContent>
 
@@ -353,16 +354,15 @@ export default function OrderHistory() {
                 <TableHead>
                   <TableRow>
                     <TableCell />
-                    {columns.map((column, index) => (
+                    {columns.map((column) => (
                       <TableCell
-                        key={index}
+                        key={column.id}
                         align={column.align}
                         style={{ minWidth: column.minWidth }}
                       >
                         {column.label}
                       </TableCell>
                     ))}
-                    <TableCell style={{ minWidth: '270px' }} align="left" />
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -387,9 +387,9 @@ export default function OrderHistory() {
             />
           </>
         ) : (
-          <div>
-            <h1>Loading...</h1>
-          </div>
+          <>
+            <VendorsPriceList products={products} />
+          </>
         )}
       </Card>
     </>

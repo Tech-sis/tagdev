@@ -60,6 +60,7 @@ function Row(props) {
       addDoc(docRef, {
         products: arr,
         vendorid: currentUser.uid,
+        customerId: row.uid,
         verified: false,
         accepted: false,
         id: row.id,
